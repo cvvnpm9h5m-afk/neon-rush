@@ -1,0 +1,260 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><title>Neon Rush 3D v4.9 — Piedra Papel Tijeras</title><style>*{box-sizing:border-box}html{width:100%;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%;touch-action:none}body{position:fixed;inset:0;width:100%;height:100%;-webkit-text-size-adjust:100%;overscroll-behavior:none;margin:0;background:#080b1f;color:white;font:16px system-ui;overflow:hidden;touch-action:none}canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none}#pauseBtn{position:fixed;top:49px;right:14px;z-index:5;padding:9px 14px;font-size:14px;background:#242849;color:#fff;border:1px solid #73eaff;display:none}#pauseOverlay{position:fixed;inset:0;z-index:7;background:#070b1bba;display:none;place-items:center}#pauseCard{background:#151632;border:1px solid #73eaff;border-radius:18px;padding:28px;text-align:center;min-width:230px}#roleBubble{position:fixed;z-index:2;display:none;pointer-events:none;transform:translate(-50%,-100%);background:#fff;color:#14112c;border:3px solid #7deaff;border-radius:10px;padding:3px 6px;box-shadow:0 2px 8px #0008;font-size:14px;line-height:1.1;white-space:nowrap}#roleBubble:after{content:"";position:absolute;bottom:-6px;left:calc(50% - 5px);border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #fff}#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;text-shadow:0 2px 5px #000;pointer-events:none}#menu{position:fixed;inset:0;display:grid;place-items:center;background:#080a1ad9}#difficulty{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;justify-content:center;margin:10px 0 15px}#difficulty button{padding:11px 12px;font-size:13px;background:#242849;color:#e4eaff;border:1px solid #5c6089;flex:1}#difficulty button.active{background:#4ee5f4;color:#071126;border-color:#fff;box-shadow:0 0 15px #4ee5f488}#card{width:min(94vw,380px);max-height:94dvh;overflow:auto;background:#151632;border:1px solid #8a5bff;padding:28px;border-radius:20px;text-align:center;max-width:340px}h1{color:#5deaff;margin:0}button{border:0;border-radius:12px;background:#41dcf1;color:#071126;font-weight:bold;padding:14px 22px;font-size:17px}#controls{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}#controls .control-column{position:static;display:contents;pointer-events:none}#controls button{position:absolute;width:48px;height:48px;transform:translate(-50%,-50%);background:#233a6be6;color:white;border:1px solid #66dfff;padding:0;font-size:20px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;pointer-events:auto}#controls #left{left:24%;top:54%}#controls #right{left:76%;top:54%}#controls #up{left:15%;top:66%}#controls #down{left:85%;top:66%}#controls button:active{background:#3874a9}#orientationNotice{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:#080b1f;color:white;text-align:center;padding:24px}#orientationNotice .orient-card{max-width:340px;background:#171a38;border:1px solid #73eaff;border-radius:20px;padding:24px}#orientationNotice .orient-icon{font-size:56px;margin-bottom:12px}@media(orientation:landscape) and (pointer:coarse){#orientationNotice{display:grid}}#roleHud{color:#7ef4ff;font-weight:900;transition:transform .18s,color .18s}#roleHud.pulse{transform:scale(1.25);color:#fff}#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:#fff;z-index:3}#level{position:fixed;top:88px;left:0;right:0;text-align:center;color:#ffd68c;font-size:12px;font-weight:800;pointer-events:none;text-shadow:0 2px 6px #000}#toast{position:fixed;top:20%;left:0;right:0;text-align:center;font-size:28px;font-weight:900;pointer-events:none;text-shadow:0 3px 8px #000;opacity:0;transition:opacity .2s}#hpHud{position:fixed;top:111px;left:12px;z-index:4;display:none;pointer-events:none;background:#11152bcc;border:1px solid #ff7a9a;border-radius:12px;padding:7px 10px;min-width:145px}#hpLabel{font-size:12px;font-weight:900;color:#ffd2dc;margin-bottom:4px}#hpTrack{height:12px;background:#482238;border-radius:10px;overflow:hidden;border:1px solid #ff8ba9}#hpFill{height:100%;width:50%;background:linear-gradient(90deg,#f84b7a,#ff9db5);transition:width .2s}#rpgHud{position:fixed;top:171px;left:12px;z-index:4;display:none;pointer-events:none;background:#11152bcc;border:1px solid #a785ff;border-radius:10px;padding:6px 9px;width:145px;font-size:12px;font-weight:800}#xpTrack{height:6px;background:#29274d;border-radius:8px;overflow:hidden;margin-top:5px}#xpFill{height:100%;width:0;background:#ad83ff}#skillBtn{position:fixed;right:14px;top:119px;z-index:5;display:none;padding:9px 10px;font-size:13px;background:#262345;color:#fff;border:1px solid #d8b2ff}#skillBtn:disabled{opacity:.5}#legend{position:fixed;top:62px;left:0;right:0;text-align:center;font-size:13px;color:#c9caff;pointer-events:none}small{color:#b8b8df}</style></head><body><div id="hud"><span>PUNTOS <b id="score">0</b></span><span id="roleHud">ROL: ✊ PIEDRA</span><span>RÉCORD <b id="best">0</b></span></div><div id="legend">✊ &gt; ✌️ &nbsp; ✋ &gt; ✊ &nbsp; ✌️ &gt; ✋</div><div id="level">NIVEL 1 · VELOCIDAD 1×</div><div id="hpHud"><div id="hpLabel">❤️ HP <span id="hpCount">4 / 4</span></div><div id="hpTrack"><div id="hpFill"></div></div></div><div id="rpgHud">⭐ LVL <span id="charLvl">1</span> · XP <span id="xpCount">0 / 100</span><div id="xpTrack"><div id="xpFill"></div></div></div><button id="skillBtn" type="button">⚡ RAYO ×<span id="skillCount">0</span></button><div id="roleBubble" aria-label="Rol actual">✊</div><button id="pauseBtn" type="button" aria-label="Pausar">⏸ PAUSA</button><div id="pauseOverlay"><div id="pauseCard"><h2>⏸ PAUSA</h2><p>Partida detenida</p><button id="resumeBtn">▶ CONTINUAR</button><button id="homeBtn" type="button" style="display:block;width:100%;margin-top:12px;background:#2c3058;color:#fff;border:1px solid #8c90d9">⌂ MENÚ PRINCIPAL</button></div></div><div id="flash"></div><div id="toast"></div><div id="controls"><div class="control-column control-left"><button id="left" type="button" aria-label="Mover a la izquierda">◀</button><button id="up" type="button" aria-label="Saltar">▲</button></div><div class="control-column control-right"><button id="right" type="button" aria-label="Mover a la derecha">▶</button><button id="down" type="button" aria-label="Agacharse">▼</button></div></div><div id="orientationNotice" role="status"><div class="orient-card"><div class="orient-icon">📱↻</div><h2>Gira el teléfono</h2><p>Neon Rush está diseñado para jugar en vertical. La partida queda detenida mientras el teléfono está horizontal.</p></div></div><div id="menu"><div id="card"><h1>NEON RUSH 3D</h1><h3>Versión 4.9 · Piedra, papel y tijeras</h3><p id="message">Cargando personaje 3D…</p><div style="font-size:13px;font-weight:700">ELIGE LA DIFICULTAD</div><div id="difficulty"><button type="button" data-mode="easy">🟢 FÁCIL</button><button type="button" data-mode="normal" class="active">🟡 NORMAL</button><button type="button" data-mode="hard">🔴 DIFÍCIL</button><button type="button" data-mode="extreme">🔥 EXTREMO</button></div><p id="recordInfo" style="font-size:12px;color:#bde9ff;line-height:1.5">Récord de dificultad: 0 · Récord general: 0</p><p style="font-size:12px;color:#b8b8df">Victoria: 10 × velocidad² puntos · Daño: Fácil −1, Medio −2, Difícil −3, Extremo −4 HP (aumenta con la velocidad)</p><div style="font-size:13px;font-weight:700">MODALIDAD</div><div id="gameModes" style="display:flex;gap:8px;margin:10px 0 16px"><button type="button" data-layout="three" style="flex:1;padding:10px;font-size:13px">3 SÍMBOLOS</button><button type="button" data-layout="six" style="flex:1;padding:10px;font-size:13px">6 SÍMBOLOS</button></div><button id="play">JUGAR</button><p><small>✊ vence ✌️ · ✋ vence ✊ · ✌️ vence ✋</small></p><p><small>3 símbolos: elige un carril. 6 símbolos: tres abajo y tres arriba; salta para elegir arriba. Empatar cambia tu rol. El daño depende de la dificultad y aumenta con la velocidad. Gana XP para subir de nivel y aumentar tu HP máximo. Recoge corazones y rayos ⚡; usa los rayos para eliminar parte de los símbolos que te derrotarían.</small></p></div></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=x=>document.querySelector(x), scene=new THREE.Scene();scene.background=new THREE.Color(0x090b23);scene.fog=new THREE.FogExp2(0x090b23,.006);
+const camera=new THREE.PerspectiveCamera(66,document.documentElement.clientWidth/document.documentElement.clientHeight,.1,350);camera.position.set(0,9.4,13.8);camera.lookAt(0,0.65,-36);
+const renderer=new THREE.WebGLRenderer({antialias:true, powerPreference:"high-performance"});renderer.setSize(document.documentElement.clientWidth,document.documentElement.clientHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0x9bcaff,0x19102e,2));const light=new THREE.DirectionalLight(0xffd1ee,2.5);light.position.set(-4,9,7);scene.add(light);
+const road=new THREE.Mesh(new THREE.BoxGeometry(10,.15,340),new THREE.MeshStandardMaterial({color:0x111b38,roughness:.6}));road.position.z=-140;road.position.y=-.12;scene.add(road);
+const laneWidth=2.7;for(let i=-1;i<=1;i++){const edge=new THREE.Mesh(new THREE.BoxGeometry(.07,.035,340),new THREE.MeshBasicMaterial({color:i===0?0x445588:0xff33a9}));edge.position.set(i===0?0:Math.sign(i)*4.9,.01,-140);scene.add(edge)}
+let marks=[];for(let z=-260;z<12;z+=8)for(let x of [-laneWidth/2,laneWidth/2]){const m=new THREE.Mesh(new THREE.BoxGeometry(.07,.02,3),new THREE.MeshBasicMaterial({color:0x59edff}));m.position.set(x,.03,z);scene.add(m);marks.push(m)}
+// Cityscape v3.8: varied architecture, textured windows, neon signage, rooftop structures and street lamps.
+// Repeated window detail is baked into a few small textures to keep mobile draw calls low.
+function facadeTexture(seed){
+ const c=document.createElement('canvas');c.width=256;c.height=512;
+ const x=c.getContext('2d');x.fillStyle=['#10172e','#191631','#101f32','#1c1832'][seed%4];x.fillRect(0,0,256,512);
+ const lit=['#ffd79a','#72dfff','#ef9eff','#d6e8ff'];
+ for(let y=16;y<500;y+=29)for(let xx=13;xx<256;xx+=29){
+  const on=((xx*13+y*7+seed*31)%11)<6;
+  x.fillStyle=on?lit[(xx+y+seed)%lit.length]:'#25324d';x.globalAlpha=on?.72:.65;x.fillRect(xx,y,16,17);
+  x.fillStyle='#0b1125';x.globalAlpha=.9;x.fillRect(xx+7,y,2,17);
+ }x.globalAlpha=1;
+ for(let y=0;y<512;y+=116){x.fillStyle='#060d20';x.fillRect(0,y,256,5)}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;
+}
+const facadeMats=Array.from({length:4},(_,i)=>new THREE.MeshStandardMaterial({map:facadeTexture(i),roughness:.9,emissive:new THREE.Color([0x14233b,0x23172d,0x10263b,0x21152e][i]),emissiveIntensity:.35}));
+const roofMat=new THREE.MeshStandardMaterial({color:0x101529,metalness:.35,roughness:.65});
+const neonColors=[0x3cecff,0xff4cb3,0xffc65a,0x9770ff];
+const neonMats=neonColors.map(color=>new THREE.MeshBasicMaterial({color}));
+const buildingGeo=new THREE.BoxGeometry(1,1,1),roofGeo=new THREE.BoxGeometry(1,1,1);
+const buildings=[];
+for(let i=0;i<120;i++){
+ const side=i%2?-1:1,depth=Math.floor(i/2),z=9-depth*5.1;
+ const h=5+((depth*7+i*3)%15),w=2.9+((i*3)%5)*.55,d=3+((i*11)%4)*.45;
+ const x=side*(7.4+(depth%3)*3.1);
+ const group=new THREE.Group();group.position.set(x,0,z);
+ const tower=new THREE.Mesh(buildingGeo,facadeMats[i%4]);tower.scale.set(w,h,d);tower.position.y=h/2;group.add(tower);
+ const roof=new THREE.Mesh(roofGeo,roofMat);roof.scale.set(w+.25,.23,d+.25);roof.position.y=h+.13;group.add(roof);
+ if(i%3===0){const crown=new THREE.Mesh(roofGeo,neonMats[i%4]);crown.scale.set(w+.3,.09,d+.3);crown.position.y=h+.29;group.add(crown)}
+ if(i%4===0){const antenna=new THREE.Mesh(new THREE.CylinderGeometry(.025,.055,1.8,5),neonMats[(i+1)%4]);antenna.position.set(0,h+1.1,0);group.add(antenna)}
+ if(i%5===0){
+  const panel=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1.05),neonMats[(i+2)%4]);
+  panel.position.set(-side*(w/2+.035),h*.67,0);panel.rotation.y=side*Math.PI/2;group.add(panel);
+  const inset=new THREE.Mesh(new THREE.PlaneGeometry(1.55,.72),new THREE.MeshBasicMaterial({color:0x090d26,side:THREE.DoubleSide}));inset.position.copy(panel.position);inset.x-=side*.012;inset.rotation.y=panel.rotation.y;group.add(inset);
+ }
+ scene.add(group);buildings.push(group);
+}
+// Neon pavement edges, overhead arches and roadside lamps repeat along the track.
+const streetLampMat=new THREE.MeshStandardMaterial({color:0x283552,metalness:.65,roughness:.35});
+const lampGlow=new THREE.MeshBasicMaterial({color:0x5ceaff});
+for(let z=5;z>-300;z-=18){
+ for(const side of [-1,1]){
+  const x=side*5.9;
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(.055,.08,6.2,7),streetLampMat);pole.position.set(x,3.1,z);scene.add(pole);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(1.05,.08,.08),streetLampMat);arm.position.set(x-side*.5,6.1,z);scene.add(arm);
+  const lamp=new THREE.Mesh(new THREE.BoxGeometry(.55,.08,.2),lampGlow);lamp.position.set(x-side*.95,6.02,z);scene.add(lamp);
+ }
+}
+// Removed overhead neon crossbars and their supports to keep the incoming symbols unobstructed.
+
+const player=new THREE.Group();player.position.set(0,0,2);scene.add(player);let mixer=null,hero=null,ready=false;
+// The game is playable even if the external GLB cannot be loaded.
+function fallbackHero(){
+ const group=new THREE.Group();
+ const mat=new THREE.MeshStandardMaterial({color:0xd94985,roughness:.65});
+ const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.28,.85,5,12),mat);
+ torso.position.y=1.25;group.add(torso);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.27,16,12),new THREE.MeshStandardMaterial({color:0xf2b4a8}));
+ head.position.y=2.2;group.add(head);
+ const hair=new THREE.Mesh(new THREE.CapsuleGeometry(.3,.85,5,12),mat);hair.position.set(0,1.85,.22);group.add(hair);
+ for(const x of [-.16,.16]){const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.11,.68,4,10),new THREE.MeshStandardMaterial({color:0xddd2e5}));leg.position.set(x,.55,0);group.add(leg)}
+ return group;
+}
+function setReady(message){
+ ready=true;$('#message').textContent=message;
+ $('#play').disabled=false;$('#play').style.opacity='1';$('#play').textContent='JUGAR';
+}
+const loader=new GLTFLoader();
+loader.load('./heroine.glb?v=33',g=>{
+ if(ready)return;try {
+  hero=g.scene;hero.scale.setScalar(.95);hero.rotation.y=0;player.add(hero);
+  if(g.animations.length){mixer=new THREE.AnimationMixer(hero);mixer.clipAction(g.animations[0]).play()}
+  setReady('Heroína 3D cargada · ¡Lista para jugar!');
+ }catch(err){console.error(err);hero=fallbackHero();player.add(hero);setReady('Modo alternativo: error de modelo 3D')}
+},undefined,e=>{
+ if(ready)return;console.error('GLB:',e);hero=fallbackHero();player.add(hero);
+ setReady('Modo alternativo: no se pudo cargar heroine.glb');
+});
+setTimeout(()=>{if(!ready){hero=fallbackHero();player.add(hero);setReady('Modo alternativo: carga demasiado lenta')}},12000);
+
+const SIGNS=[{name:'PIEDRA',emoji:'✊',color:0xff985c},{name:'PAPEL',emoji:'✋',color:0x55e7d1},{name:'TIJERAS',emoji:'✌️',color:0xc58cff}];
+const winsAgainst=[2,0,1]; // piedra > tijeras, papel > piedra, tijeras > papel
+const BASE_SPEED=17;const MODES={easy:{label:'FÁCIL',mult:1,growth:.13,damage:1},normal:{label:'MEDIO',mult:1.5,growth:.18,damage:2},hard:{label:'DIFÍCIL',mult:2,growth:.23,damage:3},extreme:{label:'EXTREMO',mult:3,growth:.3,damage:4}};
+let mode='normal',layout='three';try{const stored=localStorage.getItem('neonRpsLayout');if(stored==='six')layout='six'}catch(e){}try{const saved=localStorage.getItem('neonRpsDifficulty');if(MODES[saved])mode=saved}catch(e){}
+function updateDifficulty(){document.querySelectorAll('#difficulty button').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode))})}
+document.querySelectorAll('#difficulty button').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;try{localStorage.setItem('neonRpsDifficulty',mode)}catch(e){}updateDifficulty()}));updateDifficulty();
+function updateLayout(){document.querySelectorAll('#gameModes button').forEach(b=>{const active=b.dataset.layout===layout;b.style.background=active?'#4ee5f4':'#242849';b.style.color=active?'#071126':'#e4eaff';b.style.border=active?'2px solid white':'2px solid #5c6089';b.setAttribute('aria-pressed',String(active))})}
+document.querySelectorAll('#gameModes button').forEach(b=>b.addEventListener('click',()=>{layout=b.dataset.layout;try{localStorage.setItem('neonRpsLayout',layout)}catch(e){}updateLayout()}));updateLayout();
+// v4.0 uses a separate leaderboard: old 100-point scores are not comparable.
+const SCORE_KEY='neonRushRpsV39Records';
+let records={easy:0,normal:0,hard:0,extreme:0};
+try{const saved=JSON.parse(localStorage.getItem(SCORE_KEY)||'{}');for(const key of Object.keys(records)){const n=Number(saved[key]);if(Number.isFinite(n)&&n>=0)records[key]=Math.floor(n)}}catch(e){}
+function generalBest(){return Math.max(...Object.values(records))}
+function updateRecords(){const current=records[mode]||0;$('#best').textContent=current.toLocaleString('es-ES');$('#recordInfo').textContent='Récord '+MODES[mode].label+': '+current.toLocaleString('es-ES')+' · Récord general: '+generalBest().toLocaleString('es-ES')}
+const START_HP=4;let maxHP=START_HP,hp=START_HP,hearts=[],heartWave=0,charLevel=1,xp=0,skillCharges=0,lightnings=[],lightningWave=0;
+// Each difficulty has its own damage. Speed progression adds one point
+// of damage for each full 1.0x increase above the starting speed.
+function currentDamage(){
+ const setting=MODES[mode];
+ const extra=Math.max(0,Math.floor((speed/BASE_SPEED-setting.mult)+1e-7));
+ return Math.min(8,setting.damage+extra);
+}
+function xpNeeded(){return 100+50*(charLevel-1)}
+function updateRPG(){$('#charLvl').textContent=charLevel;$('#xpCount').textContent=xp+' / '+xpNeeded();$('#xpFill').style.width=(100*xp/xpNeeded())+'%';$('#skillCount').textContent=skillCharges;$('#skillBtn').disabled=skillCharges===0}
+function addXP(n){xp+=n;while(xp>=xpNeeded()){xp-=xpNeeded();charLevel++;maxHP++;hp=Math.min(maxHP,hp+1);updateHP();toast('⭐ NIVEL '+charLevel+' · HP MÁXIMO +1','#ddc2ff');burst(player.position.x,1.8,2,0xb48aff,30)}updateRPG()}
+function blinkOnDamage(){
+ // Blink only the character mesh, not the role bubble or the HUD.
+ damageBlink=1.25;
+ if(hero)hero.visible=true;
+}
+function resetBlink(){damageBlink=0;if(hero)hero.visible=true;}
+function updateHP(){document.querySelector('#hpCount').textContent=hp+' / '+maxHP;document.querySelector('#hpFill').style.width=(100*hp/maxHP)+'%';}
+let damageBlink=0; // Seconds remaining for Mario-style damage blinking
+let orientationHold=false,paused=false,resolvedWaves=new Set(),playing=false,lane=0,score=0,speed=18,elapsed=0,spawn=.8,items=[],jump=0,vel=0,slide=0,prev=performance.now(),role=0,toastTime=0,particles=[],flashTime=0,level=1,waves=0;
+updateRecords();updateHP();updateRPG();
+function setRole(r){role=r;const h=$('#roleHud');h.textContent='ROL: '+SIGNS[r].emoji+' '+SIGNS[r].name;$('#roleBubble').textContent=SIGNS[r].emoji;h.classList.remove('pulse');void h.offsetWidth;h.classList.add('pulse');setTimeout(()=>h.classList.remove('pulse'),350);}
+function toast(s,color='#fff'){const t=$('#toast');t.textContent=s;t.style.color=color;t.style.opacity='1';toastTime=1.15;}
+function makeSignTexture(r){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#15132d';x.beginPath();if(x.roundRect)x.roundRect(12,12,232,232,44);else x.rect(12,12,232,232);x.fill();x.strokeStyle='#'+SIGNS[r].color.toString(16).padStart(6,'0');x.lineWidth=12;x.stroke();x.font='140px "Apple Color Emoji","Segoe UI Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(SIGNS[r].emoji,128,126);x.fillStyle='#fff';x.font='bold 22px system-ui';x.fillText(SIGNS[r].name,128,222);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;return tx;}
+const signMaterials=SIGNS.map((_,r)=>new THREE.MeshBasicMaterial({map:makeSignTexture(r),side:THREE.DoubleSide,transparent:true}));
+function start(){resetBlink();if(!ready){$('#message').textContent='Cargando el modelo. Espera unos segundos…';return;}items.forEach(i=>scene.remove(i.mesh));items=[];hearts.forEach(h=>scene.remove(h.mesh));hearts=[];lightnings.forEach(h=>scene.remove(h.mesh));lightnings=[];heartWave=0;lightningWave=0;maxHP=START_HP;hp=START_HP;charLevel=1;xp=0;skillCharges=0;updateHP();updateRPG();resolvedWaves.clear();paused=false;$('#pauseOverlay').style.display='none';$('#pauseBtn').style.display='block';$('#controls').style.display='block';$('#hpHud').style.display='block';$('#rpgHud').style.display='block';$('#skillBtn').style.display='block';$('#pauseBtn').textContent='⏸ PAUSA';$('#roleBubble').style.display='block';particles.forEach(p=>scene.remove(p.mesh));particles=[];lane=0;score=elapsed=jump=vel=slide=0;waves=0;level=1;flashTime=0;$('#flash').style.opacity='0';$('#level').textContent='ETAPA 1 · '+MODES[mode].label+' · VELOCIDAD '+MODES[mode].mult.toFixed(1)+'× · DAÑO '+MODES[mode].damage+' HP · '+(layout==='six'?'6':'3')+' SÍMBOLOS';$('#score').textContent='0';updateRecords();setRole(Math.floor(Math.random()*3));speed=BASE_SPEED*MODES[mode].mult;spawn=1.1;playing=true;$('#menu').style.display='none';$('#toast').style.opacity='0';player.position.set(0,0,2);if(hero)hero.scale.y=.95}
+// Handle every press immediately; a rapid second press can cross two lanes.
+// Snap the visual position to the target lane, rather than waiting for interpolation.
+function move(n){
+ if(!playing||paused||orientationHold)return;
+ lane=Math.max(-1,Math.min(1,lane+n));
+ player.position.x=lane*laneWidth;
+}function up(){if(playing&&!paused&&jump===0&&slide===0)vel=9}function down(){if(playing&&!paused&&jump===0)slide=.75}
+function togglePause(){if(!playing||orientationHold)return;paused=!paused;$('#pauseOverlay').style.display=paused?'grid':'none';$('#pauseBtn').textContent=paused?'▶ SEGUIR':'⏸ PAUSA';prev=performance.now()}function returnToMenu(){resetBlink();
+ // Leave a paused game without triggering game-over or changing the high score.
+ playing=false;paused=false;
+ $('#pauseOverlay').style.display='none';$('#pauseBtn').style.display='none';$('#controls').style.display='none';
+ $('#roleBubble').style.display='none';$('#hpHud').style.display='none';$('#rpgHud').style.display='none';$('#skillBtn').style.display='none';$('#toast').style.opacity='0';
+ $('#menu').style.display='grid';updateRecords();$('#play').textContent='JUGAR';
+ $('#message').textContent='Elige dificultad y modalidad para comenzar.';
+ items.forEach(o=>scene.remove(o.mesh));items=[];hearts.forEach(h=>scene.remove(h.mesh));hearts=[];lightnings.forEach(h=>scene.remove(h.mesh));lightnings=[];resolvedWaves.clear();
+ particles.forEach(p=>{scene.remove(p.mesh);p.mesh.geometry.dispose();p.mesh.material.dispose()});particles=[];
+ player.position.set(0,0,2);if(hero)hero.scale.y=.95;
+ prev=performance.now();
+}
+$('#homeBtn').onclick=returnToMenu;
+$('#skillBtn').onclick=useLightning;
+$('#pauseBtn').onclick=togglePause;$('#resumeBtn').onclick=togglePause;$('#play').onclick=start;
+// pointerdown reacts on touch-down, with no Safari delayed-click dependency.
+// Suppress the compatibility click after pointerdown so a tap moves exactly once.
+for(const [id,action] of [['left',()=>move(-1)],['right',()=>move(1)],['up',up],['down',down]]){
+ const button=$('#'+id);
+ let lastPointer=0;
+ button.addEventListener('pointerdown',e=>{
+  if(e.cancelable)e.preventDefault();
+  lastPointer=performance.now();
+  action();
+ });
+ button.addEventListener('click',e=>{
+  if(performance.now()-lastPointer<650){e.preventDefault();return;}
+  action();
+ });
+}
+addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key==='a')move(-1);if(e.key==='ArrowRight'||e.key==='d')move(1);if(e.key==='ArrowUp'||e.key===' ')up();if(e.key==='ArrowDown')down();if((e.key==='Escape'||e.key==='p'||e.key==='P')&&playing)togglePause();if((e.key==='q'||e.key==='Q')&&playing)useLightning();if(e.key==='Enter'&&!playing)start()});let sx,sy;renderer.domElement.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});renderer.domElement.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;if(Math.abs(dx)>Math.abs(dy))move(Math.sign(dx));else dy<0?up():down()},{passive:true});
+// Each wave has one sign per lane (classic), or two signs at different heights.
+// In six-sign mode the upper and lower rows are separate selectable targets.
+function shuffledSigns(){const a=[0,1,2];for(let i=2;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function create(){
+ const bottom=shuffledSigns(),top=shuffledSigns(),z=-145;waves++;
+ const layers=layout==='six'?[{signs:bottom,height:1.15,upper:false},{signs:top,height:3.55,upper:true}]:[{signs:bottom,height:1.65,upper:false}];
+ for(const layer of layers)for(let i=0;i<3;i++){
+  const l=i-1,r=layer.signs[i];const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.1,2.1),signMaterials[r]);
+  mesh.position.set(l*laneWidth,layer.height,z);scene.add(mesh);
+  items.push({mesh,l,r,upper:layer.upper,hit:false,wave:waves});
+ }
+}
+
+// Heart pickups appear between sign waves and never count as a RPS choice.
+const HEART_TYPES=[{hp:1,color:0xff587e,label:'ROJO'},{hp:2,color:0x5fe6ff,label:'AZUL'},{hp:3,color:0xd18cff,label:'VIOLETA'},{hp:4,color:0xffd65e,label:'DORADO'}];
+function heartTexture(t){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.clearRect(0,0,256,256);x.shadowBlur=22;x.shadowColor='#'+t.color.toString(16).padStart(6,'0');x.fillStyle=x.shadowColor;x.font='bold 154px "Apple Color Emoji","Segoe UI Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('♥',128,115);x.shadowBlur=0;x.strokeStyle='#fff';x.lineWidth=3;x.strokeText('♥',128,115);x.fillStyle='#fff';x.font='bold 34px system-ui';x.fillText('+'+t.hp+' HP',128,221);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex;}
+const heartMats=HEART_TYPES.map(t=>new THREE.MeshBasicMaterial({map:heartTexture(t),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+function createHeart(){const idx=Math.random()<.55?0:Math.random()<.7?1:Math.random()<.8?2:3;const l=Math.floor(Math.random()*3)-1;const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),heartMats[idx]);mesh.position.set(l*laneWidth,1.65,-170);scene.add(mesh);hearts.push({mesh,l,hp:HEART_TYPES[idx].hp,hit:false});}
+// A collectible lightning charge removes roughly half of the losing targets
+// in each of the next three unresolved waves. Winning/tie choices remain intact.
+const lightningMaterial=new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#fff3b0';x.shadowColor='#ffe052';x.shadowBlur=25;x.font='bold 170px system-ui';x.textAlign='center';x.textBaseline='middle';x.fillText('⚡',128,113);x.shadowBlur=0;x.fillStyle='white';x.font='bold 27px system-ui';x.fillText('RAYO',128,220);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),transparent:true,side:THREE.DoubleSide,depthWrite:false});
+function createLightning(){const l=Math.floor(Math.random()*3)-1;const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.0,2.0),lightningMaterial);mesh.position.set(l*laneWidth,1.65,-170);scene.add(mesh);lightnings.push({mesh,l,hit:false})}
+function useLightning(){if(!playing||paused||orientationHold||skillCharges<=0)return;skillCharges--;updateRPG();let removed=0;const waveIds=[...new Set(items.filter(o=>!o.hit&&!resolvedWaves.has(o.wave)&&o.mesh.position.z<1).map(o=>o.wave))].sort((a,b)=>a-b).slice(0,3);for(const wave of waveIds){const losing=items.filter(o=>o.wave===wave&&!o.hit&&o.r!==role&&o.r!==winsAgainst[role]);const count=Math.ceil(losing.length/2);for(const o of losing.sort(()=>Math.random()-.5).slice(0,count)){o.hit=true;scene.remove(o.mesh);burst(o.mesh.position.x,o.mesh.position.y,o.mesh.position.z,0xffe57a,5);removed++}}toast('⚡ RAYO: '+removed+' SÍMBOLOS ELIMINADOS','#ffe57a');burst(player.position.x,2,2,0xffe57a,38)}
+function burst(x,y,z,color,count=22){
+ const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:1,depthWrite:false});
+ for(let i=0;i<count;i++){
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(.09,.09,.09),material.clone());
+  mesh.position.set(x,y,z);scene.add(mesh);
+  particles.push({mesh,vx:(Math.random()-.5)*9,vy:Math.random()*6+1,vz:(Math.random()-.5)*6,life:.7+Math.random()*.5,max:1.2});
+ }
+}
+function flash(color){const f=$('#flash');f.style.background=color;flashTime=.2;f.style.opacity='.3'}
+function lose(){resetBlink();playing=false;paused=false;$('#pauseBtn').style.display='none';$('#controls').style.display='none';$('#pauseOverlay').style.display='none';$('#roleBubble').style.display='none';$('#hpHud').style.display='none';$('#rpgHud').style.display='none';$('#skillBtn').style.display='none';records[mode]=Math.max(records[mode],score);try{localStorage.setItem(SCORE_KEY,JSON.stringify(records))}catch(e){}updateRecords();$('#message').textContent=`${score} puntos · Tu rol era ${SIGNS[role].name}`;$('#play').textContent='VOLVER A JUGAR';$('#menu').style.display='grid';burst(player.position.x,1.5,2,0xff376b,36)}
+function resolve(r){
+ if(r===role){let options=[0,1,2].filter(x=>x!==role);setRole(options[Math.floor(Math.random()*2)]);toast('¡EMPATE! NUEVO ROL: '+SIGNS[role].emoji,'#80eaff');burst(player.position.x,1.7,2,0x4be8ff,24);}
+ else if(r===winsAgainst[role]){const multiplier=speed/BASE_SPEED;const points=Math.round(10*multiplier*multiplier);score+=points;addXP(points);toast('¡GANASTE! +'+points,'#83ff9e');burst(player.position.x,1.7,2,0x68ffab,28);}
+ else {const damage=currentDamage();hp=Math.max(0,hp-damage);if(hp>0)blinkOnDamage();updateHP();burst(player.position.x,1.7,2,0xff547d,20);if(hp===0){toast('¡SIN HP! −'+damage+' HP','#ff688e');lose()}else{toast('¡DAÑO! −'+damage+' HP · QUEDAN '+hp,'#ff9bb3')}}
+}
+function tick(now){requestAnimationFrame(tick);let dt=Math.min(.05,(now-prev)/1000);prev=now;
+ if(!paused&&!orientationHold&&toastTime>0){toastTime-=dt;if(toastTime<=0)$('#toast').style.opacity='0'}
+ if(!paused&&!orientationHold&&flashTime>0){flashTime-=dt;$('#flash').style.opacity=String(Math.max(0,flashTime/.2*.3))}for(const p of particles){if(paused||orientationHold)continue;p.life-=dt;p.mesh.position.x+=p.vx*dt;p.mesh.position.y+=p.vy*dt;p.mesh.position.z+=p.vz*dt;p.vy-=12*dt;p.mesh.material.opacity=Math.max(0,p.life/p.max)}particles=particles.filter(p=>{if(p.life<=0){scene.remove(p.mesh);p.mesh.material.dispose();p.mesh.geometry.dispose();return false}return true});if(mixer&&playing&&!paused&&!orientationHold)mixer.update(dt*1.5);
+ if(playing&&!paused&&!orientationHold&&damageBlink>0){
+  damageBlink=Math.max(0,damageBlink-dt);
+  if(hero)hero.visible=damageBlink===0||Math.floor(damageBlink/.115)%2===0;
+ }
+ if(playing&&!paused&&!orientationHold){elapsed+=dt;level=Math.min(12,1+Math.floor(elapsed/20));const setting=MODES[mode];speed=Math.min(BASE_SPEED*setting.mult*2.2,BASE_SPEED*setting.mult+elapsed*setting.growth);$('#level').textContent='ETAPA '+level+' · '+setting.label+' · VELOCIDAD '+(speed/BASE_SPEED).toFixed(1)+'× · DAÑO '+currentDamage()+' HP · '+(layout==='six'?'6':'3')+' SÍMBOLOS · +'+Math.round(10*(speed/BASE_SPEED)**2)+' PTS';spawn-=dt;if(spawn<=0){create();heartWave++;if(heartWave%4===0)createHeart();if(heartWave%6===0)createLightning();spawn=Math.max(1.15,147/speed)}
+ player.position.x+=(lane*laneWidth-player.position.x)*Math.min(1,dt*16);
+ if(jump>0||vel>0){jump+=vel*dt;vel-=23*dt;if(jump<0){jump=0;vel=0}}
+ player.position.y=jump;slide=Math.max(0,slide-dt);if(hero)hero.scale.y=slide>0?.62:.95;
+ for(const m of marks){m.position.z+=speed*dt;if(m.position.z>12)m.position.z-=272}
+ for(const o of items){o.mesh.position.z+=speed*dt;
+ if(!o.hit&&!resolvedWaves.has(o.wave)&&o.mesh.position.z>1&&o.mesh.position.z<3.1&&o.l===lane&&
+    (layout==='three'||(o.upper?jump>=1.15:jump<1.15))){
+   // Resolve exactly one choice per wave. Leave the other five symbols visible
+   // as they travel behind the player, rather than deleting the whole wave.
+   resolvedWaves.add(o.wave);o.hit=true;scene.remove(o.mesh);resolve(o.r);if(!playing)break
+ }
+ }
+ for(const h of hearts){h.mesh.position.z+=speed*dt;h.mesh.rotation.z=Math.sin(elapsed*4)*.08;if(!h.hit&&h.mesh.position.z>1&&h.mesh.position.z<3.1&&h.l===lane){h.hit=true;scene.remove(h.mesh);const gained=Math.min(h.hp,maxHP-hp);hp=Math.min(maxHP,hp+h.hp);updateHP();toast(gained?'❤️ +'+gained+' HP':'❤️ HP COMPLETOS','#ffb4ce');burst(player.position.x,1.6,2,0xff719f,14)}}hearts=hearts.filter(h=>{if(h.hit||h.mesh.position.z>15){scene.remove(h.mesh);return false}return true});
+ for(const h of lightnings){h.mesh.position.z+=speed*dt;h.mesh.rotation.z=Math.sin(elapsed*5)*.08;if(!h.hit&&h.mesh.position.z>1&&h.mesh.position.z<3.1&&h.l===lane){h.hit=true;scene.remove(h.mesh);skillCharges=Math.min(9,skillCharges+1);updateRPG();toast('⚡ RAYO CONSEGUIDO · PULSA ⚡','#ffe47b');burst(player.position.x,1.6,2,0xffe47b,15)}}lightnings=lightnings.filter(h=>{if(h.hit||h.mesh.position.z>15){scene.remove(h.mesh);return false}return true});
+ items=items.filter(o=>{if(o.hit||o.mesh.position.z>15){scene.remove(o.mesh);return false}return true});for(const w of resolvedWaves){if(!items.some(o=>o.wave===w))resolvedWaves.delete(w)}$('#score').textContent=score;
+ }
+ if(playing&&!orientationHold){const p=new THREE.Vector3(player.position.x,player.position.y+2.65,player.position.z);p.project(camera);const b=$('#roleBubble');b.style.left=((p.x+1)*document.documentElement.clientWidth/2)+'px';b.style.top=((-p.y+1)*document.documentElement.clientHeight/2)+'px';b.style.display='block'}
+ renderer.render(scene,camera)}requestAnimationFrame(tick);
+function updateOrientation(){
+ orientationHold=window.matchMedia('(orientation: landscape) and (pointer: coarse)').matches;
+ // Preserve the game state while landscape is shown; do not reset or resume a user pause.
+ prev=performance.now();
+}
+function syncViewport(){
+ const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight;
+ if(!w||!h)return;
+ camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
+ window.scrollTo(0,0);updateOrientation();
+}
+// Prevent Safari's gesture zoom and accidental double-tap zoom during play.
+// Allow single-finger taps on game buttons and menu scrolling.
+document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gestureend',e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
+let lastTouchEnd=0;
+document.addEventListener('touchend',e=>{
+ const now=Date.now();
+ if(playing&&now-lastTouchEnd<300)e.preventDefault();
+ lastTouchEnd=now;
+},{passive:false});
+addEventListener('resize',syncViewport);
+if(window.visualViewport){visualViewport.addEventListener('resize',syncViewport);visualViewport.addEventListener('scroll',()=>window.scrollTo(0,0));}
+
+addEventListener('orientationchange',()=>{updateOrientation();setTimeout(syncViewport,150);setTimeout(syncViewport,500)});
+syncViewport();
+</script></body></html>
