@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#080d24"><title>Neon Rush 3D v2.4.2</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080d24;color:white;font-family:system-ui,-apple-system,sans-serif;touch-action:none}
+canvas{display:block;width:100vw;height:100dvh}#hud{position:fixed;top:env(safe-area-inset-top);left:0;right:0;display:flex;justify-content:space-between;padding:14px 18px;pointer-events:none;text-shadow:0 2px 8px black}
+#hud b{font-size:23px}#hud small{display:block;color:#a9c3e8;font-size:11px;letter-spacing:2px}.panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(#070a22bb,#06081eea);padding:24px}
+.card{width:min(440px,100%);padding:28px 22px;border:1px solid #3d68a5;border-radius:24px;background:#101632ee;box-shadow:0 0 65px #00bfff22;text-align:center}.logo{font-size:clamp(35px,10vw,55px);font-weight:1000;line-height:1;letter-spacing:-2px;color:#6efaff;text-shadow:0 0 24px #00bfff}
+p{color:#c2c9e2;line-height:1.5}button{background:linear-gradient(110deg,#00d9ef,#8a5bff);border:0;color:#051024;border-radius:14px;font-weight:900;font-size:17px;padding:16px 30px;min-height:54px;cursor:pointer}
+#controls{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none}#controls button{pointer-events:auto;min-width:65px;padding:10px 12px;background:#162b58aa;border:1px solid #75dafa88;color:white;backdrop-filter:blur(8px);font-size:22px}#controls .group{display:flex;gap:10px}
+#mute{position:fixed;right:16px;top:calc(88px + env(safe-area-inset-top));z-index:3;background:#122345bb;border:1px solid #6ac8f588;color:white;font-size:19px;padding:8px 12px;min-height:0}
+.hidden{display:none!important}#footer{position:fixed;bottom:calc(94px + env(safe-area-inset-bottom));width:100%;text-align:center;font-size:11px;color:#a9b3d1;pointer-events:none}
+</style></head><body>
+<canvas id="game"></canvas>
+<div id="hud"><div><small>PUNTOS</small><b id="score">0</b></div><div style="text-align:center"><small>MONEDAS</small><b id="coins">🟡 0</b></div><div style="text-align:right"><small>RÉCORD</small><b id="best">0</b></div></div>
+<button id="mute" aria-label="Sonido">🔊</button>
+<div id="controls"><div class="group"><button id="left">◀</button><button id="right">▶</button></div><div class="group"><button id="down">▼</button><button id="up">▲</button></div></div>
+<div id="footer">Desliza para moverte · ▲ Saltar · ▼ Deslizar</div>
+<div id="overlay" class="panel"><div class="card"><div class="logo">NEON<br>RUSH <span style="color:#f36bff">3D</span></div><div style="display:inline-block;margin:14px 0 3px;padding:6px 15px;border:1px solid #6efaff88;border-radius:999px;background:#00d9ef16;color:#b8faff;font-size:13px;font-weight:800;letter-spacing:2px">VERSIÓN 2.4.2</div><p>Perspectiva mejorada · Ciudad neón · Movimiento fluido</p><p>↔ Cambia de carril &nbsp; ↑ Salta &nbsp; ↓ Deslízate</p><button id="start">▶ JUGAR</button><p style="font-size:12px">Récord local · Sonidos · Compatible con móviles</p></div></div>
+<script>
+(()=>{'use strict';
+const canvas=document.querySelector('#game'),ctx=canvas.getContext('2d'),$=s=>document.querySelector(s);
+let W=0,H=0,dpr=1;
+function resize(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);resize();
+let state='menu',score=0,coins=0,best=0,lane=0,visualLane=0,jump=0,vy=0,slide=0,objects=[],spawn=0,speed=20,dist=0,last=0,muted=false,audio=null,shake=0;
+try{best=Number(localStorage.getItem('neonRush3dBest')||0)}catch(e){} $('#best').textContent=best;
+const rand=(a,b)=>a+Math.random()*(b-a), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function sound(f=440,d=.1,type='sine',vol=.06){if(muted)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(Math.max(60,f*.65),audio.currentTime+d);g.gain.setValueAtTime(vol,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
+function updateHud(){$('#score').textContent=Math.floor(score);$('#coins').textContent='🟡 '+coins;$('#best').textContent=best}
+function start(){score=coins=dist=0;speed=20;lane=visualLane=0;jump=vy=slide=0;objects=[];spawn=.45;state='playing';$('#overlay').classList.add('hidden');sound(600,.15);updateHud()}
+function move(dir){if(state!=='playing')return;lane=clamp(lane+dir,-1,1);sound(260,.055,'triangle',.025)}
+function hop(){if(state==='playing'&&jump===0&&slide<=0){vy=9.5;sound(540,.18,'sine',.05)}}
+function duck(){if(state==='playing'&&jump===0){slide=.8;sound(180,.1,'triangle',.04)}}
+$('#start').onclick=start;$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
+$('#left').onclick=()=>move(-1);$('#right').onclick=()=>move(1);$('#up').onclick=hop;$('#down').onclick=duck;
+addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','a','d','w','s'].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key==='a')move(-1);if(e.key==='ArrowRight'||e.key==='d')move(1);if(e.key==='ArrowUp'||e.key==='w'||e.key===' ')hop();if(e.key==='ArrowDown'||e.key==='s')duck();if(e.key==='Enter'&&state!=='playing')start()});
+let sx=0,sy=0;canvas.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+canvas.addEventListener('touchend',e=>{const x=e.changedTouches[0].clientX-sx,y=e.changedTouches[0].clientY-sy;if(Math.max(Math.abs(x),Math.abs(y))<25)return;if(Math.abs(x)>Math.abs(y))move(x>0?1:-1);else if(y<0)hop();else duck()},{passive:true});
+// Camera 2.4: horizon higher, runner lower, objects visible from a longer distance.
+// All world geometry shares the same projection, keeping collision and rendering aligned.
+const HORIZON=.365, FOCAL=1.02, DEPTH_OFFSET=8.5, PLAYER_Z=6.3, LANE_WIDTH=1.55;
+function proj(x,y,z){const scale=Math.min(W,H)*FOCAL/(z+DEPTH_OFFSET);return{x:W/2+x*scale,y:H*HORIZON+(4.15-y)*scale,s:scale}}
+function poly(points,fill,stroke,width=2){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}}
+function quad(a,b,c,d,color){poly([a,b,c,d],color)}
+function line(a,b,color,width=2){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+function cuboid(x,y,z,w,h,dep,front,side,top){const a=proj(x-w/2,y,z),b=proj(x+w/2,y,z),c=proj(x+w/2,y+h,z),d=proj(x-w/2,y+h,z),e=proj(x-w/2,y,z+dep),f=proj(x+w/2,y,z+dep),g=proj(x+w/2,y+h,z+dep),k=proj(x-w/2,y+h,z+dep);quad(d,c,g,k,top);quad(b,f,g,c,side);quad(a,b,c,d,front)}
+function background(t){
+const grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#070b29');grad.addColorStop(.55,'#27255d');grad.addColorStop(1,'#060a1e');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+const horizon=H*HORIZON;ctx.save();ctx.shadowColor='#ff6bd9';ctx.shadowBlur=32;ctx.fillStyle='#ff74c9';ctx.beginPath();ctx.arc(W*.76,H*.17,Math.min(W,H)*.08,0,Math.PI*2);ctx.fill();ctx.restore();
+for(let layer=0;layer<2;layer++)for(let i=0;i<34;i++){const bw=W/30,bx=i*bw-5+layer*9,bh=(Math.sin(i*17.71+layer*9)*.5+.5)*H*(layer?.14:.22)+H*.04;ctx.fillStyle=layer?'#141b3d':'#10132f';ctx.fillRect(bx,horizon-bh,bw+2,bh);ctx.fillStyle=layer?'#2bd9ef77':'#bc62ef55';for(let j=0;j<5;j++)for(let k=0;k<2;k++)if((i+j+k+layer)%3===0)ctx.fillRect(bx+4+k*bw/3,horizon-bh+10+j*bh/6,2,3)}
+ctx.fillStyle='#46b7ff0d';ctx.fillRect(0,horizon-3,W,12)}
+function road(){
+quad(proj(-4.3,0,.5),proj(4.3,0,.5),proj(4.3,0,125),proj(-4.3,0,125),'#151b39');
+for(const x of [-3.1,3.1]){line(proj(x,0,.5),proj(x,0,125),'#ff4cc9',3)}
+for(const x of [-LANE_WIDTH/2,LANE_WIDTH/2])line(proj(x,.01,.5),proj(x,.01,125),'#56658d',1);
+for(let z=3-(dist%9);z<125;z+=9)for(const x of [-LANE_WIDTH/2,LANE_WIDTH/2]){if(z>0)quad(proj(x-.04,.015,z),proj(x+.04,.015,z),proj(x+.04,.015,z+3.5),proj(x-.04,.015,z+3.5),'#54eaffbb')}
+for(let z=9-(dist%16);z<125;z+=16)if(z>0)for(const x of [-5.4,5.4]){cuboid(x,0,z,.18,3.2,.2,'#1a4972','#103254','#6befff');const p=proj(x,3.2,z);ctx.save();ctx.shadowColor='#50eeff';ctx.shadowBlur=13;ctx.fillStyle='#73f5ff';ctx.fillRect(p.x-3,p.y-2,6,4);ctx.restore()}
+}
+function coin(x,z,t){const p=proj(x,1.1+Math.sin(t*5+z)*.1,z),r=p.s*.45;if(r<1)return;ctx.save();ctx.translate(p.x,p.y);ctx.scale(.75+Math.abs(Math.cos(t*4))*.25,1);ctx.shadowColor='#ffd34a';ctx.shadowBlur=12;ctx.fillStyle='#ffcc39';ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#fff2a0';ctx.lineWidth=Math.max(1,r*.14);ctx.stroke();ctx.fillStyle='#fff2a0';ctx.font=`bold ${Math.max(7,r)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('★',0,1);ctx.restore()}
+function obstacle(o){const x=o.lane*LANE_WIDTH,z=o.z;if(o.kind==='coin'){coin(x,z,dist/20);return}
+if(o.kind==='low'){cuboid(x,0,z,1.12,.95,.7,'#ff386a','#a51c54','#ff92ab');const p=proj(x,.65,z);ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(8,p.s*.27)}px sans-serif`;ctx.textAlign='center';ctx.fillText('▲',p.x,p.y)}
+else if(o.kind==='high'){cuboid(x-.55,0,z,.18,2.5,.4,'#8143dc','#542990','#bf91ff');cuboid(x+.55,0,z,.18,2.5,.4,'#8143dc','#542990','#bf91ff');cuboid(x,1.85,z,1.27,.65,.4,'#ff42a7','#9d236f','#ffa4e5')}
+else cuboid(x,0,z,1.18,2.35,.8,'#ff7832','#a43a38','#ffd36d')}
+function player(t){
+// v2.4.2: smoothly illustrated adult human heroine (no cuboids).
+const x=visualLane*LANE_WIDTH,z=PLAYER_Z,sc=proj(x,0,z).s*.67;
+const foot=proj(x,0,z),stride=state==='playing'?Math.sin(t*15):0;
+const bounce=state==='playing'?Math.abs(Math.sin(t*15))*.035:0;
+ctx.save();ctx.translate(foot.x,foot.y-(jump+bounce)*sc);ctx.scale(sc,-sc);
+const slideFactor=slide>0?.65:1;ctx.scale(1,slideFactor);
+function shape(points,color,stroke=null,sw=.025){ctx.beginPath();for(const v of points){if(v[0]==='M')ctx.moveTo(v[1],v[2]);else if(v[0]==='L')ctx.lineTo(v[1],v[2]);else if(v[0]==='Q')ctx.quadraticCurveTo(v[1],v[2],v[3],v[4]);else if(v[0]==='C')ctx.bezierCurveTo(...v.slice(1));else if(v[0]==='Z')ctx.closePath()}ctx.fillStyle=color;ctx.fill();if(stroke){ctx.lineWidth=sw;ctx.strokeStyle=stroke;ctx.stroke()}}
+function limb(points,width,color,outline){ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=outline;ctx.lineWidth=width+.055;ctx.stroke();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke()}
+// Ground shadow stays on road even while jumping.
+ctx.save();ctx.translate(0,-(jump+bounce));ctx.scale(1,1/slideFactor);ctx.fillStyle='#35dffb55';ctx.beginPath();ctx.ellipse(0,.02,.62,.13,0,0,Math.PI*2);ctx.fill();ctx.restore();
+const swing=stride*.20;
+// Long athletic legs, curved contours and running motion.
+limb([[-.20,1.00],[-.22+swing*.40,.55],[-.22+swing,.13]],.26,'#252446','#0b0e24');
+limb([[.20,1.00],[.22-swing*.40,.55],[.22-swing,.13]],.26,'#29294f','#0b0e24');
+limb([[-.22+swing,.23],[-.24+swing,.09]],.23,'#101b39','#080e21');
+limb([[.22-swing,.23],[.24-swing,.09]],.23,'#101b39','#080e21');
+// Arms behind body, softly swinging with the gait.
+limb([[-.37,1.86],[-.50-swing*.4,1.50],[-.44-swing,1.18]],.19,'#a45ce2','#3a225a');
+limb([[.37,1.86],[.50+swing*.4,1.50],[.44+swing,1.18]],.19,'#9654d8','#3a225a');
+// Flowing hair behind neck and shoulders.
+const hairSway=Math.sin(t*9)*.095;
+shape([['M',-.27,2.35],['Q',-.46,2.21,-.44,1.78],['Q',-.50+hairSway,1.34,-.37+hairSway,1.11],['Q',-.14,1.30,0,1.49],['Q',.15,1.22,.38+hairSway,1.10],['Q',.49+hairSway,1.49,.40,1.90],['Q',.42,2.25,.25,2.41],['Z']],'#52226e','#261136');
+shape([['M',-.33,2.19],['Q',-.44,1.75,-.31+hairSway,1.26],['Q',-.21,1.57,-.16,2.18],['Z']],'#9e4ed8');
+// Feminine, athletic silhouette: tapered waist and natural curved shoulders/hips.
+shape([['M',-.30,1.05],['C',-.44,1.13,-.45,1.38,-.32,1.52],['C',-.25,1.63,-.35,1.76,-.40,1.86],['Q',-.29,2.00,-.16,2.00],['L',.16,2.00],['Q',.29,2.00,.40,1.86],['C',.35,1.75,.25,1.62,.32,1.52],['C',.45,1.37,.44,1.14,.30,1.05],['Q',0,.94,-.30,1.05],['Z']],'#24223e','#0e1029');
+// Suit panels and waist detailing.
+shape([['M',-.31,1.87],['Q',0,1.96,.31,1.87],['Q',.24,1.62,.23,1.47],['Q',0,1.40,-.23,1.47],['Q',-.24,1.62,-.31,1.87],['Z']],'#493073');
+shape([['M',-.32,1.42],['Q',0,1.35,.32,1.42],['L',.30,1.30],['Q',0,1.23,-.30,1.30],['Z']],'#13b9d4');
+shape([['M',-.29,1.16],['Q',0,1.09,.29,1.16],['L',.29,1.02],['Q',0,.96,-.29,1.02],['Z']],'#53337d');
+// Neck, natural oval head, soft face visible at a slight three-quarter angle.
+shape([['M',-.105,2.02],['L',-.10,2.18],['L',.10,2.18],['L',.105,2.02],['Z']],'#d79a87');
+ctx.fillStyle='#e5ad98';ctx.beginPath();ctx.ellipse(.035,2.37,.275,.36,-.07,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#b87573';ctx.beginPath();ctx.ellipse(.245,2.34,.055,.075,0,0,Math.PI*2);ctx.fill();
+// Side-parted hair, strands and small facial details.
+shape([['M',-.25,2.47],['C',-.29,2.76,.18,2.83,.33,2.55],['Q',.19,2.63,.05,2.65],['Q',-.08,2.53,-.25,2.47],['Z']],'#48205f');
+shape([['M',-.26,2.51],['Q',-.37,2.30,-.27,2.06],['Q',-.22,2.31,-.12,2.47],['Z']],'#8d3dc4');
+ctx.fillStyle='#34253c';ctx.beginPath();ctx.ellipse(.155,2.40,.025,.017,0,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle='#a45c70';ctx.lineWidth=.015;ctx.beginPath();ctx.moveTo(.11,2.26);ctx.quadraticCurveTo(.18,2.24,.21,2.28);ctx.stroke();
+// Glowing trims, subtle highlight on suit.
+ctx.strokeStyle='#65efff';ctx.lineWidth=.025;ctx.beginPath();ctx.moveTo(-.23,1.83);ctx.quadraticCurveTo(0,1.68,.23,1.83);ctx.stroke();
+ctx.restore()}
+function spawnObjects(){const l=Math.floor(rand(0,3))-1,kind=Math.random()<.42?'low':Math.random()<.56?'high':'wall';objects.push({lane:l,z:112,kind,hit:false});if(Math.random()<.75){const cl=l===0?(Math.random()<.5?-1:1):0;for(let i=0;i<4;i++)objects.push({lane:cl,z:115+i*3.3,kind:'coin',hit:false})}}
+function crash(){state='over';shake=10;sound(110,.4,'sawtooth',.13);best=Math.max(best,Math.floor(score));try{localStorage.setItem('neonRush3dBest',best)}catch(e){}updateHud();$('#overlay').classList.remove('hidden');$('#overlay').innerHTML=`<div class="card"><div class="logo">FIN DEL<br>RECORRIDO</div><h2>${Math.floor(score)} puntos</h2><p>🟡 ${coins} monedas recogidas<br>🏆 Récord: ${best}</p><button id="restart">↻ VOLVER A JUGAR</button><p style="font-size:12px">Neon Rush 3D · Versión 2.4.2.2</p></div>`;$('#restart').onclick=start}
+function update(dt){if(state!=='playing')return;speed=Math.min(43,20+dist/190);dist+=speed*dt;score+=speed*dt*.65;
+visualLane+=(lane-visualLane)*(1-Math.exp(-13*dt));if(jump>0||vy>0){jump+=vy*dt;vy-=23*dt;if(jump<=0){jump=0;vy=0}}slide=Math.max(0,slide-dt);
+spawn-=dt;if(spawn<=0){spawnObjects();spawn=Math.max(.7,1.7-dist/1800)}
+for(const o of objects){o.z-=speed*dt;
+if(!o.hit&&o.z<PLAYER_Z+1.55&&o.z>PLAYER_Z-1.45&&o.lane===lane){o.hit=true;if(o.kind==='coin'){coins++;score+=25;sound(920,.1,'sine',.055)}
+else if(o.kind==='low'&&jump>1.05){}else if(o.kind==='high'&&slide>.05){}else{crash();break}}}
+objects=objects.filter(o=>o.z>-8&&(o.kind!=='coin'||!o.hit));updateHud()}
+function frame(ms){const t=ms/1000,dt=Math.min(.04,(ms-last)/1000||.016);last=ms;update(dt);ctx.save();if(shake>.2){ctx.translate(rand(-shake,shake),rand(-shake,shake));shake*=.82}background(t);road();
+// Draw back to front, including the runner in depth order: obstacles stay visible behind it.
+const render=objects.filter(o=>o.z>-8).map(o=>({z:o.z,draw:()=>obstacle(o)}));render.push({z:PLAYER_Z,draw:()=>player(t)});render.sort((a,b)=>b.z-a.z);for(const item of render)item.draw();
+ctx.restore();requestAnimationFrame(frame)}requestAnimationFrame(frame);
+})();
+</script></body></html>
