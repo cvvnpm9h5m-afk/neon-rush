@@ -1,0 +1,52 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Neon Rush 3D v3.2 — Piedra Papel Tijeras</title><style>*{box-sizing:border-box}body{margin:0;background:#080b1f;color:white;font:16px system-ui;overflow:hidden;touch-action:none}canvas{display:block}#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;text-shadow:0 2px 5px #000;pointer-events:none}#menu{position:fixed;inset:0;display:grid;place-items:center;background:#080a1ad9}#card{background:#151632;border:1px solid #8a5bff;padding:28px;border-radius:20px;text-align:center;max-width:340px}h1{color:#5deaff;margin:0}button{border:0;border-radius:12px;background:#41dcf1;color:#071126;font-weight:bold;padding:14px 22px;font-size:17px}#controls{position:fixed;bottom:22px;left:15px;right:15px;display:flex;justify-content:space-between}#controls button{background:#233a6bc9;color:white;border:1px solid #66dfff;padding:14px}#controls div{display:flex;gap:8px}#roleHud{color:#7ef4ff;font-weight:900}#toast{position:fixed;top:20%;left:0;right:0;text-align:center;font-size:28px;font-weight:900;pointer-events:none;text-shadow:0 3px 8px #000;opacity:0;transition:opacity .2s}#legend{position:fixed;top:62px;left:0;right:0;text-align:center;font-size:13px;color:#c9caff;pointer-events:none}small{color:#b8b8df}</style></head><body><div id="hud"><span>PUNTOS <b id="score">0</b></span><span id="roleHud">ROL: ✊ PIEDRA</span><span>RÉCORD <b id="best">0</b></span></div><div id="legend">✊ &gt; ✌️ &nbsp; ✋ &gt; ✊ &nbsp; ✌️ &gt; ✋</div><div id="toast"></div><div id="controls"><div><button id="left">◀</button><button id="right">▶</button></div><div><button id="down">▼</button><button id="up">▲</button></div></div><div id="menu"><div id="card"><h1>NEON RUSH 3D</h1><h3>Versión 3.2 · Piedra, papel y tijeras</h3><p id="message">Cargando personaje 3D…</p><button id="play" disabled style="opacity:.55">CARGANDO…</button><p><small>✊ vence ✌️ · ✋ vence ✊ · ✌️ vence ✋</small></p><p><small>Desliza izquierda/derecha para elegir. Empatar cambia tu rol.</small></p></div></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=x=>document.querySelector(x), scene=new THREE.Scene();scene.background=new THREE.Color(0x090b23);scene.fog=new THREE.FogExp2(0x090b23,.013);
+const camera=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,.1,250);camera.position.set(0,4.3,10.6);camera.lookAt(0,1.2,-15);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0x9bcaff,0x19102e,2));const light=new THREE.DirectionalLight(0xffd1ee,2.5);light.position.set(-4,9,7);scene.add(light);
+const road=new THREE.Mesh(new THREE.BoxGeometry(10,.15,260),new THREE.MeshStandardMaterial({color:0x111b38,roughness:.6}));road.position.z=-105;road.position.y=-.12;scene.add(road);
+const laneWidth=2.7;for(let i=-1;i<=1;i++){const edge=new THREE.Mesh(new THREE.BoxGeometry(.07,.035,260),new THREE.MeshBasicMaterial({color:i===0?0x445588:0xff33a9}));edge.position.set(i===0?0:Math.sign(i)*4.9,.01,-105);scene.add(edge)}
+let marks=[];for(let z=-180;z<12;z+=8)for(let x of [-laneWidth/2,laneWidth/2]){const m=new THREE.Mesh(new THREE.BoxGeometry(.07,.02,3),new THREE.MeshBasicMaterial({color:0x59edff}));m.position.set(x,.03,z);scene.add(m);marks.push(m)}
+let buildings=[];for(let i=0;i<85;i++){let side=i%2?-1:1,z=-i*3.3;let h=3+(i*17%9);const m=new THREE.Mesh(new THREE.BoxGeometry(2.5,h,2.5),new THREE.MeshStandardMaterial({color:i%3?0x1c2353:0x331c55,emissive:i%4?0x080c21:0x200928}));m.position.set(side*(8+(i%3)*2),h/2-.2,z);scene.add(m);buildings.push(m)}
+const player=new THREE.Group();player.position.set(0,0,2);scene.add(player);let mixer=null,hero=null,ready=false;
+new GLTFLoader().load('./heroine.glb',g=>{hero=g.scene;hero.scale.setScalar(.95);hero.rotation.y=0;player.add(hero);if(g.animations.length){mixer=new THREE.AnimationMixer(hero);mixer.clipAction(g.animations[0]).play()}ready=true;$('#message').textContent='Heroína 3D animada lista';$('#play').disabled=false;$('#play').style.opacity='1';$('#play').textContent='JUGAR';},undefined,e=>{$('#message').textContent='Error al cargar heroine.glb. Comprueba que esté junto a index.html y vuelve a abrir la página.';$('#play').textContent='ERROR DE CARGA';console.error(e)});
+const SIGNS=[{name:'PIEDRA',emoji:'✊',color:0xff985c},{name:'PAPEL',emoji:'✋',color:0x55e7d1},{name:'TIJERAS',emoji:'✌️',color:0xc58cff}];
+const winsAgainst=[2,0,1]; // piedra > tijeras, papel > piedra, tijeras > papel
+let playing=false,lane=0,score=0,best=Number(localStorage.getItem('neonBestRps3d')||0),speed=18,elapsed=0,spawn=.8,items=[],jump=0,vel=0,slide=0,prev=performance.now(),role=0,toastTime=0;$('#best').textContent=best;
+function setRole(r){role=r;$('#roleHud').textContent='ROL: '+SIGNS[r].emoji+' '+SIGNS[r].name;}
+function toast(s,color='#fff'){const t=$('#toast');t.textContent=s;t.style.color=color;t.style.opacity='1';toastTime=1.15;}
+function makeSignTexture(r){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#15132d';x.beginPath();x.roundRect(12,12,232,232,44);x.fill();x.strokeStyle='#'+SIGNS[r].color.toString(16).padStart(6,'0');x.lineWidth=12;x.stroke();x.font='140px "Apple Color Emoji","Segoe UI Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(SIGNS[r].emoji,128,126);x.fillStyle='#fff';x.font='bold 22px system-ui';x.fillText(SIGNS[r].name,128,222);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;return tx;}
+const signMaterials=SIGNS.map((_,r)=>new THREE.MeshBasicMaterial({map:makeSignTexture(r),side:THREE.DoubleSide,transparent:true}));
+function start(){if(!ready){$('#message').textContent='El personaje todavía se está cargando. Espera unos segundos.';return;}items.forEach(i=>scene.remove(i.mesh));items=[];lane=0;score=elapsed=jump=vel=slide=0;setRole(Math.floor(Math.random()*3));speed=18;spawn=.8;playing=true;$('#menu').style.display='none';$('#toast').style.opacity='0';player.position.set(0,0,2);hero.scale.y=.95}
+function move(n){if(playing)lane=Math.max(-1,Math.min(1,lane+n))}function up(){if(playing&&jump===0&&slide===0)vel=9}function down(){if(playing&&jump===0)slide=.75}
+$('#play').onclick=start;$('#left').onclick=()=>move(-1);$('#right').onclick=()=>move(1);$('#up').onclick=up;$('#down').onclick=down;
+addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key==='a')move(-1);if(e.key==='ArrowRight'||e.key==='d')move(1);if(e.key==='ArrowUp'||e.key===' ')up();if(e.key==='ArrowDown')down();if(e.key==='Enter'&&!playing)start()});let sx,sy;renderer.domElement.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});renderer.domElement.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;if(Math.abs(dx)>Math.abs(dy))move(Math.sign(dx));else dy<0?up():down()},{passive:true});
+function create(){
+ // One symbol per wave, with randomized lane and type.
+ const l=Math.floor(Math.random()*3)-1,r=Math.floor(Math.random()*3);
+ const mesh=new THREE.Mesh(new THREE.PlaneGeometry(1.55,1.55),signMaterials[r]);
+ mesh.position.set(l*laneWidth,1.4,-105);scene.add(mesh);items.push({mesh,l,r,hit:false});
+}
+function lose(){playing=false;best=Math.max(best,score);localStorage.setItem('neonBestRps3d',best);$('#best').textContent=best;$('#message').textContent=`${score} puntos · Tu rol era ${SIGNS[role].name}`;$('#play').textContent='VOLVER A JUGAR';$('#menu').style.display='grid'}
+function resolve(r){
+ if(r===role){let options=[0,1,2].filter(x=>x!==role);setRole(options[Math.floor(Math.random()*2)]);toast('¡EMPATE! NUEVO ROL: '+SIGNS[role].emoji,'#80eaff');}
+ else if(r===winsAgainst[role]){score+=100;toast('¡GANASTE! +100','#83ff9e');}
+ else {toast('¡PERDISTE!','#ff688e');lose();}
+}
+function tick(now){requestAnimationFrame(tick);let dt=Math.min(.05,(now-prev)/1000);prev=now;
+ if(toastTime>0){toastTime-=dt;if(toastTime<=0)$('#toast').style.opacity='0'}
+ if(mixer&&playing)mixer.update(dt*1.5);
+ if(playing){elapsed+=dt;speed=Math.min(39,18+elapsed*.22);spawn-=dt;if(spawn<=0){create();spawn=Math.max(.85,1.65-elapsed*.006)}
+ player.position.x+=(lane*laneWidth-player.position.x)*Math.min(1,dt*12);
+ if(jump>0||vel>0){jump+=vel*dt;vel-=23*dt;if(jump<0){jump=0;vel=0}}
+ player.position.y=jump;slide=Math.max(0,slide-dt);if(hero)hero.scale.y=slide>0?.62:.95;
+ for(const m of marks){m.position.z+=speed*dt;if(m.position.z>12)m.position.z-=192}
+ for(const o of items){o.mesh.position.z+=speed*dt;
+ if(!o.hit&&o.mesh.position.z>1&&o.mesh.position.z<3.1&&o.l===lane&&jump<1.15){o.hit=true;scene.remove(o.mesh);resolve(o.r);if(!playing)break}
+ }
+ items=items.filter(o=>{if(o.hit||o.mesh.position.z>15){scene.remove(o.mesh);return false}return true});$('#score').textContent=score;
+ }
+ renderer.render(scene,camera)}requestAnimationFrame(tick);
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script></body></html>
