@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#080d24"><title>Neon Rush 3D v2.4</title>
+<meta name="theme-color" content="#080d24"><title>Neon Rush 3D v2.4.1</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080d24;color:white;font-family:system-ui,-apple-system,sans-serif;touch-action:none}
 canvas{display:block;width:100vw;height:100dvh}#hud{position:fixed;top:env(safe-area-inset-top);left:0;right:0;display:flex;justify-content:space-between;padding:14px 18px;pointer-events:none;text-shadow:0 2px 8px black}
@@ -16,7 +16,7 @@ p{color:#c2c9e2;line-height:1.5}button{background:linear-gradient(110deg,#00d9ef
 <button id="mute" aria-label="Sonido">🔊</button>
 <div id="controls"><div class="group"><button id="left">◀</button><button id="right">▶</button></div><div class="group"><button id="down">▼</button><button id="up">▲</button></div></div>
 <div id="footer">Desliza para moverte · ▲ Saltar · ▼ Deslizar</div>
-<div id="overlay" class="panel"><div class="card"><div class="logo">NEON<br>RUSH <span style="color:#f36bff">3D</span></div><div style="display:inline-block;margin:14px 0 3px;padding:6px 15px;border:1px solid #6efaff88;border-radius:999px;background:#00d9ef16;color:#b8faff;font-size:13px;font-weight:800;letter-spacing:2px">VERSIÓN 2.4</div><p>Perspectiva mejorada · Ciudad neón · Movimiento fluido</p><p>↔ Cambia de carril &nbsp; ↑ Salta &nbsp; ↓ Deslízate</p><button id="start">▶ JUGAR</button><p style="font-size:12px">Récord local · Sonidos · Compatible con móviles</p></div></div>
+<div id="overlay" class="panel"><div class="card"><div class="logo">NEON<br>RUSH <span style="color:#f36bff">3D</span></div><div style="display:inline-block;margin:14px 0 3px;padding:6px 15px;border:1px solid #6efaff88;border-radius:999px;background:#00d9ef16;color:#b8faff;font-size:13px;font-weight:800;letter-spacing:2px">VERSIÓN 2.4.1</div><p>Perspectiva mejorada · Ciudad neón · Movimiento fluido</p><p>↔ Cambia de carril &nbsp; ↑ Salta &nbsp; ↓ Deslízate</p><button id="start">▶ JUGAR</button><p style="font-size:12px">Récord local · Sonidos · Compatible con móviles</p></div></div>
 <script>
 (()=>{'use strict';
 const canvas=document.querySelector('#game'),ctx=canvas.getContext('2d'),$=s=>document.querySelector(s);
@@ -63,16 +63,33 @@ if(o.kind==='low'){cuboid(x,0,z,1.12,.95,.7,'#ff386a','#a51c54','#ff92ab');const
 else if(o.kind==='high'){cuboid(x-.55,0,z,.18,2.5,.4,'#8143dc','#542990','#bf91ff');cuboid(x+.55,0,z,.18,2.5,.4,'#8143dc','#542990','#bf91ff');cuboid(x,1.85,z,1.27,.65,.4,'#ff42a7','#9d236f','#ffa4e5')}
 else cuboid(x,0,z,1.18,2.35,.8,'#ff7832','#a43a38','#ffd36d')}
 function player(t){
-const x=visualLane*LANE_WIDTH,z=PLAYER_Z,y=jump,s=slide>0?.62:1,run=state==='playing'?Math.sin(t*17)*.13:0;
+// Adult cyberpunk heroine: long flowing hair, athletic silhouette and fitted neon suit.
+const x=visualLane*LANE_WIDTH,z=PLAYER_Z,y=jump,s=slide>0?.62:1,run=state==='playing'?Math.sin(t*17)*.11:0;
 const anchor=proj(x,.05,z);ctx.save();ctx.translate(anchor.x,anchor.y);ctx.scale(.62,.62);ctx.translate(-anchor.x,-anchor.y);
 const p=proj(x,.04,z);ctx.save();ctx.fillStyle='#00f3ff44';ctx.shadowColor='#00eaff';ctx.shadowBlur=18;ctx.beginPath();ctx.ellipse(p.x,p.y,p.s*.8,p.s*.2,0,0,Math.PI*2);ctx.fill();ctx.restore();
-cuboid(x-.23,y,z,.28,.8*s,.34,'#27377e','#141b52','#59e9fa');cuboid(x+.23,y,z,.28,.8*s,.34,'#27377e','#141b52','#59e9fa');
-cuboid(x,y+.65*s,z,.82,.95*s,.42,'#18c6e8','#176aa2','#9df9ff');
-cuboid(x-.54,y+.75*s+run,z,.24,.78*s,.3,'#ac4cff','#6e37b1','#f0baff');cuboid(x+.54,y+.75*s-run,z,.24,.78*s,.3,'#ac4cff','#6e37b1','#f0baff');
-cuboid(x,y+1.62*s,z,.64,.65*s,.55,'#f2b7a9','#ba7b91','#ffd2c0');cuboid(x,y+1.98*s,z,.72,.18,.57,'#25194f','#1a133e','#8d4cff');
-const eye=proj(x,y+1.82*s,z-.04);ctx.fillStyle='#071d42';ctx.fillRect(eye.x-eye.s*.22,eye.y-eye.s*.05,eye.s*.44,eye.s*.11);ctx.fillStyle='#57f5ff';ctx.fillRect(eye.x-eye.s*.18,eye.y-eye.s*.025,eye.s*.36,eye.s*.055);ctx.restore()}
+// Long hair behind shoulders, gently animated while running.
+const sway=Math.sin(t*12)*.07;
+cuboid(x-.36+sway,y+1.06*s,z+.23,.3,1.12*s,.26,'#b34bff','#712b9d','#f5a8ff');
+cuboid(x+.35+sway,y+1.06*s,z+.23,.3,1.12*s,.26,'#9c35e9','#6b249b','#e3a3ff');
+// Boots and tapered legs.
+cuboid(x-.22,y,z,.27,.76*s,.33,'#171a39','#0b102b','#53eaff');
+cuboid(x+.22,y,z,.27,.76*s,.33,'#171a39','#0b102b','#53eaff');
+cuboid(x-.22,y+.7*s,z,.32,.48*s,.33,'#422b77','#2c1d58','#ae72ff');
+cuboid(x+.22,y+.7*s,z,.32,.48*s,.33,'#422b77','#2c1d58','#ae72ff');
+// Belt, fitted torso, and purple sleeves.
+cuboid(x,y+1.13*s,z,.7,.23*s,.43,'#131b39','#10122b','#78e9ff');
+cuboid(x,y+1.33*s,z,.67,.68*s,.38,'#33215d','#211a46','#b66bff');
+cuboid(x-.47,y+1.23*s+run,z,.22,.64*s,.29,'#7a3bc3','#4d2a8a','#d6a1ff');
+cuboid(x+.47,y+1.23*s-run,z,.22,.64*s,.29,'#7a3bc3','#4d2a8a','#d6a1ff');
+// Face, fringe and luminous visor.
+cuboid(x,y+2.04*s,z,.54,.6*s,.47,'#e6a98e','#b97779','#ffd5b5');
+cuboid(x,y+2.55*s,z,.64,.2*s,.51,'#512080','#2d164e','#b75cff');
+cuboid(x-.24,y+2.28*s,z-.04,.19,.31*s,.18,'#7b2bb2','#4c1677','#c575ef');
+const eye=proj(x,y+2.32*s,z-.05);ctx.save();ctx.shadowColor='#50f6ff';ctx.shadowBlur=8;ctx.fillStyle='#61f4ff';ctx.fillRect(eye.x-eye.s*.19,eye.y-eye.s*.03,eye.s*.38,eye.s*.065);ctx.restore();
+ctx.restore()}
+
 function spawnObjects(){const l=Math.floor(rand(0,3))-1,kind=Math.random()<.42?'low':Math.random()<.56?'high':'wall';objects.push({lane:l,z:112,kind,hit:false});if(Math.random()<.75){const cl=l===0?(Math.random()<.5?-1:1):0;for(let i=0;i<4;i++)objects.push({lane:cl,z:115+i*3.3,kind:'coin',hit:false})}}
-function crash(){state='over';shake=10;sound(110,.4,'sawtooth',.13);best=Math.max(best,Math.floor(score));try{localStorage.setItem('neonRush3dBest',best)}catch(e){}updateHud();$('#overlay').classList.remove('hidden');$('#overlay').innerHTML=`<div class="card"><div class="logo">FIN DEL<br>RECORRIDO</div><h2>${Math.floor(score)} puntos</h2><p>🟡 ${coins} monedas recogidas<br>🏆 Récord: ${best}</p><button id="restart">↻ VOLVER A JUGAR</button><p style="font-size:12px">Neon Rush 3D · Versión 2.4</p></div>`;$('#restart').onclick=start}
+function crash(){state='over';shake=10;sound(110,.4,'sawtooth',.13);best=Math.max(best,Math.floor(score));try{localStorage.setItem('neonRush3dBest',best)}catch(e){}updateHud();$('#overlay').classList.remove('hidden');$('#overlay').innerHTML=`<div class="card"><div class="logo">FIN DEL<br>RECORRIDO</div><h2>${Math.floor(score)} puntos</h2><p>🟡 ${coins} monedas recogidas<br>🏆 Récord: ${best}</p><button id="restart">↻ VOLVER A JUGAR</button><p style="font-size:12px">Neon Rush 3D · Versión 2.4.1</p></div>`;$('#restart').onclick=start}
 function update(dt){if(state!=='playing')return;speed=Math.min(43,20+dist/190);dist+=speed*dt;score+=speed*dt*.65;
 visualLane+=(lane-visualLane)*(1-Math.exp(-13*dt));if(jump>0||vy>0){jump+=vy*dt;vy-=23*dt;if(jump<=0){jump=0;vy=0}}slide=Math.max(0,slide-dt);
 spawn-=dt;if(spawn<=0){spawnObjects();spawn=Math.max(.7,1.7-dist/1800)}
