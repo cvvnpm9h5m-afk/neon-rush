@@ -1,0 +1,1171 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><title>Neon Rush 3D v8.8 — Cyber Golem y efectos de daño</title><style>*{box-sizing:border-box}html{width:100%;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%;touch-action:none}body{position:fixed;inset:0;width:100%;height:100%;-webkit-text-size-adjust:100%;overscroll-behavior:none;margin:0;background:#080b1f;color:white;font:16px system-ui;overflow:hidden;touch-action:none}canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none}#soundBtn{position:fixed;top:49px;right:112px;z-index:5;padding:9px 12px;font-size:14px;background:#242849;color:#fff;border:1px solid #73eaff;display:block}#pauseBtn{position:fixed;top:49px;right:14px;z-index:5;padding:9px 14px;font-size:14px;background:#242849;color:#fff;border:1px solid #73eaff;display:none}#pauseOverlay{position:fixed;inset:0;z-index:7;background:#070b1bba;display:none;place-items:center}#pauseCard{background:#151632;border:1px solid #73eaff;border-radius:18px;padding:28px;text-align:center;min-width:230px}#roleBubble{position:fixed;z-index:2;display:none;pointer-events:none;transform:translate(-50%,-100%);background:#fff;color:#14112c;border:3px solid #7deaff;border-radius:10px;padding:3px 6px;box-shadow:0 2px 8px #0008;font-size:14px;line-height:1.1;white-space:nowrap}#roleBubble:after{content:"";position:absolute;bottom:-6px;left:calc(50% - 5px);border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #fff}#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;text-shadow:0 2px 5px #000;pointer-events:none}#menu{position:fixed;inset:0;display:grid;place-items:center;background:#080a1ad9}#difficulty{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;justify-content:center;margin:10px 0 15px}#difficulty button{padding:11px 12px;font-size:13px;background:#242849;color:#e4eaff;border:1px solid #5c6089;flex:1}#difficulty button.active{background:#4ee5f4;color:#071126;border-color:#fff;box-shadow:0 0 15px #4ee5f488}#card{width:min(94vw,380px);max-height:94dvh;overflow:auto;background:#151632;border:1px solid #8a5bff;padding:28px;border-radius:20px;text-align:center;max-width:340px}h1{color:#5deaff;margin:0}button{border:0;border-radius:12px;background:#41dcf1;color:#071126;font-weight:bold;padding:14px 22px;font-size:17px}#controls{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}#controls .control-column{position:static;display:contents;pointer-events:none}#controls button{position:absolute;width:48px;height:48px;transform:translate(-50%,-50%);background:#233a6be6;color:white;border:1px solid #66dfff;padding:0;font-size:20px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;pointer-events:auto}#controls #left{left:24%;top:54%}#controls #right{left:76%;top:54%}#controls #up{left:15%;top:66%}#controls #down{left:85%;top:66%}#controls button:active{background:#3874a9}#orientationNotice{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:#080b1f;color:white;text-align:center;padding:24px}#orientationNotice .orient-card{max-width:340px;background:#171a38;border:1px solid #73eaff;border-radius:20px;padding:24px}#orientationNotice .orient-icon{font-size:56px;margin-bottom:12px}@media(orientation:landscape) and (pointer:coarse){#orientationNotice{display:grid}}#roleHud{color:#7ef4ff;font-weight:900;transition:transform .18s,color .18s}#roleHud.pulse{transform:scale(1.25);color:#fff}#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:#fff;z-index:3}#level{position:fixed;top:88px;left:0;right:0;text-align:center;color:#ffd68c;font-size:12px;font-weight:800;pointer-events:none;text-shadow:0 2px 6px #000}#toast{position:fixed;top:20%;left:0;right:0;text-align:center;font-size:28px;font-weight:900;pointer-events:none;text-shadow:0 3px 8px #000;opacity:0;transition:opacity .2s}#hpHud{position:fixed;top:111px;left:12px;z-index:4;display:none;pointer-events:none;background:#11152bcc;border:1px solid #ff7a9a;border-radius:12px;padding:7px 10px;min-width:145px}#hpLabel{font-size:12px;font-weight:900;color:#ffd2dc;margin-bottom:4px}#hpTrack{height:12px;background:#482238;border-radius:10px;overflow:hidden;border:1px solid #ff8ba9}#hpFill{height:100%;width:50%;background:linear-gradient(90deg,#f84b7a,#ff9db5);transition:width .2s}#rpgHud{position:fixed;top:171px;left:12px;z-index:4;display:none;pointer-events:none;background:#11152be8;border:1px solid #a785ff;border-radius:10px;padding:9px 10px;width:185px;max-width:calc(100vw - 28px);box-sizing:border-box;font-size:12px;font-weight:800;line-height:1.45}#xpTrack{height:6px;background:#29274d;border-radius:8px;overflow:hidden;margin-top:5px}#xpFill{height:100%;width:0;background:#ad83ff}#skillBtn{position:fixed;right:14px;top:119px;z-index:5;display:none;padding:9px 10px;font-size:13px;background:#262345;color:#fff;border:1px solid #d8b2ff}#skillBtn:disabled{opacity:.5}#legend{position:fixed;top:62px;left:0;right:0;text-align:center;font-size:13px;color:#c9caff;pointer-events:none}small{color:#b8b8df}#stageHud{position:fixed;top:254px;left:12px;z-index:7;display:none;color:#d8faff;font-weight:900;font-size:12px;line-height:1.4;text-shadow:0 1px 3px #000;background:#080f27f5;border:2px solid #68dfff;box-shadow:0 3px 16px #000a;border-radius:9px;padding:9px 12px;max-width:calc(100vw - 48px);box-sizing:border-box}
+#bossPanel{position:fixed;inset:0;z-index:6;display:none;pointer-events:none}
+#bossTop{position:absolute;top:18%;left:9%;right:9%;text-align:center;text-shadow:0 2px 7px #000;background:none;border:none;padding:0;box-shadow:none;box-sizing:border-box}
+#bossTrack{height:17px;border:2px solid #ff89b0;background:#32102e;border-radius:12px;overflow:hidden}
+#bossFill{height:100%;width:100%;background:linear-gradient(90deg,#fc4383,#ffc36b);transition:width .2s}
+#bossSymbol{font-size:52px;margin:10px 0 0;filter:drop-shadow(0 2px 6px #000);transform-origin:center}
+#bossTimer{font-size:15px;color:#fff2aa;font-weight:900}
+#bossChoices{position:absolute;bottom:9%;left:3%;right:3%;display:flex;gap:10px;justify-content:center;pointer-events:auto}
+#bossChoices button{flex:1;max-width:125px;background:#25284d;border:2px solid #74e7ff;color:white;padding:12px 4px;font-size:25px;touch-action:manipulation}
+#bossChoices button:disabled{opacity:.45}
+#bossInfo{display:none}
+#cutscene{position:fixed;inset:0;z-index:11;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;color:white;background:radial-gradient(circle at 50% 35%,#3e235b,#090a1b 75%);overflow:hidden;pointer-events:auto}#cutscene h2{font-size:clamp(23px,7vw,44px);margin:0;text-shadow:0 0 24px #ff71b4}#cutscene p{font-size:15px;margin:0;color:#dcfaff}#cutscene .orb{width:140px;height:140px;border:9px solid #ff9dd8;border-radius:50%;box-shadow:0 0 35px #ff69bc,inset 0 0 35px #76edff;animation:cutspin 1.1s linear infinite;display:grid;place-items:center;font-size:60px}#cutscene .orb span{animation:cutpulse .55s ease-in-out infinite alternate}@keyframes cutspin{to{transform:rotate(360deg)}}@keyframes cutpulse{to{transform:scale(1.25)}}#cutContinue{display:none;position:relative;z-index:2;margin-top:18px;padding:16px 28px;border-radius:14px;background:linear-gradient(120deg,#5ee7ff,#a6ffcb);color:#09142b;box-shadow:0 0 25px #69edff80;font-size:18px;cursor:pointer;touch-action:manipulation}#bossChoices button .cardFace{font-size:clamp(49px,14vw,77px);line-height:1.15;display:grid;place-items:center;min-height:120px}#bossChoices button .cardQuestion{font-size:54px!important}#bossChoices button{transition:transform .2s,background .2s;position:relative;min-height:158px;max-width:132px;border-radius:11px;background:linear-gradient(145deg,#faf5e7,#e8d7b9);border:3px solid #f7e9d4;box-shadow:0 6px 0 #221c36,0 8px 20px #0008;color:#241b39;overflow:hidden}#bossChoices button .cardFace small{color:#453651;font-size:11px}#bossChoices button.cardBack{background:repeating-linear-gradient(45deg,#1b3a78 0px,#1b3a78 7px,#6e3aa5 7px,#6e3aa5 14px);border:5px solid #f6e6ce;box-shadow:inset 0 0 0 3px #1c2250,inset 0 0 0 7px #f5d79e,0 7px 0 #21162f,0 12px 25px #0009;color:white}#bossChoices button.cardBack:before{content:"";position:absolute;inset:13px 9px;border:2px solid #f5d89b;border-radius:6px;background:repeating-linear-gradient(-45deg,transparent 0px,transparent 8px,#ffffff24 8px,#ffffff24 10px);pointer-events:none}#bossChoices button.cardBack .cardQuestion{position:relative;z-index:1;font-size:42px;color:#fff8cc;text-shadow:0 2px 8px #100d35,0 0 12px #fff}#bossChoices button.cardBack{background:linear-gradient(140deg,#682b8f,#122b66);border-color:#f9c5ff;box-shadow:0 0 12px #a661c9}#bossChoices button.cardBack .cardFace{display:none}#bossChoices button .cardQuestion{display:none}#bossChoices button.cardBack .cardQuestion{display:block;font-size:30px}
+/* Selección táctil del rol durante la carrera; separada de los controles laterales. */
+#rolePicker{position:fixed;bottom:max(13px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:5;display:none;gap:12px;justify-content:center;align-items:center;pointer-events:auto}
+#rolePicker button{width:clamp(58px,18vw,78px);height:clamp(58px,18vw,78px);padding:0;border:3px solid #6de5f4;border-radius:16px;background:#141c3dec;box-shadow:0 4px 14px #000b;font-size:clamp(31px,10vw,46px);line-height:1;touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform .1s,border-color .1s}
+#rolePicker button.selected{border-color:#ffe47d;background:#36405c;box-shadow:0 0 18px #ffe47d8c;transform:translateY(-5px)}
+#rolePicker button:active{transform:scale(.92)}
+body.boss-mode #hpHud{top:auto;bottom:1.5%;left:3%;min-width:0;width:31%;max-width:170px;padding:5px 7px;z-index:8;background:#11152bf5}
+body.boss-mode #hpLabel{font-size:11px;margin-bottom:2px}
+body.boss-mode #hpTrack{height:9px}
+body.boss-mode #rpgHud{top:171px;z-index:7}
+body.boss-mode #level{display:none}
+body.boss-mode #bossTop b{display:block;background:#080f27d9;border-radius:8px;padding:4px 8px;font-size:13px;white-space:nowrap}
+body.boss-mode #bossTrack{margin-top:5px}
+body.boss-mode #bossTimer{font-size:14px;background:#080f27d9;display:inline-block;padding:2px 12px;border-radius:8px}
+@media(max-height:700px){body.boss-mode #bossTop{top:16%}body.boss-mode #hpHud{bottom:1%}}
+
+/* v8.8: stage progress on the right, matching the approved runner mockup. */
+#stageHud{top:26%;left:auto;right:12px;width:clamp(144px,43vw,210px);max-width:calc(100vw - 24px);font-size:clamp(10px,2.8vw,13px);line-height:1.4;text-align:center;padding:9px 8px;background:#080f27f7;border:2px solid #68dfff;box-shadow:0 5px 17px #000b;white-space:normal;overflow-wrap:normal}
+#stageHud #stageName{display:block;color:#8cf1ff;font-size:1.08em;margin-bottom:2px}
+#stageHud #stageTime{white-space:nowrap}
+/* Boss: open centre of the 3D scene, only compact labels at the top. */
+body.boss-mode #bossTop{top:17%;left:13%;right:13%;background:transparent;border:0;box-shadow:none;padding:0;pointer-events:none}
+body.boss-mode #bossTop b{display:block;width:max-content;max-width:100%;margin:0 auto 5px;background:#080f27e8;border:1px solid #c4a3ff;border-radius:9px;padding:4px 9px;font-size:clamp(10px,3vw,14px);white-space:normal}
+body.boss-mode #bossTrack{height:13px;margin-top:3px;background:#32102e;border:2px solid #ff89b0;box-shadow:0 3px 9px #0009}
+body.boss-mode #bossSymbol{font-size:clamp(46px,13vw,66px);margin:8px 0 0;line-height:1.12;filter:drop-shadow(0 3px 8px #000);transform-origin:center}
+body.boss-mode #bossTimer{display:inline-block;font-size:14px;background:#080f27dc;padding:2px 12px;border-radius:8px;margin-top:3px}
+body.boss-mode #bossInfo{display:none!important}
+/* The character's HP is placed below the cards, lower left. */
+body.boss-mode #hpHud{top:auto;bottom:max(1.5%,env(safe-area-inset-bottom));left:3%;width:34%;max-width:172px;min-width:0;padding:6px 8px;background:#10152cf4;z-index:8}
+body.boss-mode #hpLabel{font-size:clamp(10px,2.9vw,13px)}
+body.boss-mode #hpTrack{height:10px}
+body.boss-mode #bossChoices{bottom:13%;left:3%;right:3%;gap:8px}
+body.boss-mode #bossChoices button{min-height:clamp(130px,22vh,205px);max-width:132px}
+body.boss-mode #rpgHud{top:27%;left:12px;max-width:43vw;width:clamp(135px,42vw,190px);z-index:7;padding:7px 8px;font-size:clamp(10px,2.8vw,12px)}
+body.boss-mode #skillBtn{top:26%;right:12px}
+body.boss-mode #level{display:none}
+@media(max-height:680px){body.boss-mode #bossTop{top:15%}body.boss-mode #rpgHud{top:29%}body.boss-mode #bossChoices{bottom:13%}}
+
+body.boss-mode #legend{display:none!important}
+/* v8.8 — boss presentation: visible face, leg-height HP, clear slot selector. */
+body.boss-mode #bossTop{position:absolute;inset:0;pointer-events:none;z-index:7}
+body.boss-mode #bossIdentity{position:absolute;top:51%;left:11%;width:78%;text-align:center}
+body.boss-mode #bossIdentity b{display:inline-block;width:auto;max-width:100%;font-size:clamp(11px,3.2vw,15px);padding:4px 10px;background:#0a1029ed;border:2px solid #c4a3ff;border-radius:10px}
+body.boss-mode #bossTrack{width:100%;height:15px;margin-top:7px;border:2px solid #ff89b0;box-shadow:0 3px 12px #000b}
+body.boss-mode #bossSymbol{position:absolute;top:12%;left:50%;transform:translateX(-50%);font-size:clamp(50px,14vw,70px);margin:0;line-height:1.1;filter:drop-shadow(0 3px 8px #000)}
+body.boss-mode #bossTimer{position:absolute;top:19.5%;left:50%;transform:translateX(-50%);margin:0;font-size:15px}
+body.boss-mode #bossChoices{bottom:13%;left:3%;right:3%}
+body.boss-mode #hpHud{bottom:max(1.5%,env(safe-area-inset-bottom))}
+@media(max-height:720px){body.boss-mode #bossIdentity{top:49%}body.boss-mode #bossSymbol{top:11%}body.boss-mode #bossTimer{top:19%}}
+#timingPanel{margin:12px 0;text-align:left;border:1px solid #72ddff;border-radius:12px;background:#0c1431;padding:12px}
+#timingPanel summary{cursor:pointer;color:#a8f2ff;font-weight:900;padding:4px}
+.timingRow{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;margin:12px 0;font-size:13px}
+.timingRow label{font-weight:700}.timingRow output{color:#ffdf91;font-weight:900}
+.timingRow input{grid-column:1/-1;width:100%;accent-color:#68dfff;touch-action:pan-x}
+#timingReset{width:100%;padding:9px;border:1px solid #a7b3ff;border-radius:8px;color:#fff;background:#30375d}
+#timingHelp{font-size:11px;color:#c6d5e9;line-height:1.45}
+
+/* v8.8: fixed five-card memory duel; the boss remains visible in the middle. */
+body.boss-mode #bossSymbol{display:none!important}
+body.boss-mode #bossTimer{top:21%;background:#0c1435e8;padding:5px 13px;border:1px solid #9defff;border-radius:10px;white-space:nowrap}
+body.boss-mode #bossChoices{position:absolute;top:62%;bottom:auto;left:2%;right:2%;gap:4px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));pointer-events:none;z-index:8}
+body.boss-mode #bossChoices button{width:100%;min-width:0;max-width:none;min-height:clamp(86px,13vh,140px);height:clamp(86px,13vh,140px);padding:4px 0;border-radius:8px;border-width:3px;opacity:1}
+body.boss-mode #bossChoices button .cardFace{font-size:clamp(25px,7vw,44px);min-height:0;height:100%}
+body.boss-mode #bossChoices button .cardQuestion{font-size:clamp(27px,7vw,42px)!important}
+body.boss-mode #bossChoices button.bossDone{opacity:.55;border-color:#74ffb4;filter:saturate(.6)}
+body.boss-mode #bossChoices button.bossActive{border-color:#ffe375;box-shadow:0 0 16px #ffe375}
+#bossPickHint{display:none;position:absolute;top:76.5%;left:2%;right:2%;text-align:center;font-weight:900;font-size:clamp(11px,3vw,14px);color:#fff1aa;text-shadow:0 2px 4px #000;z-index:9}
+body.boss-mode #bossPickHint{display:block}
+#bossPlayerChoices{display:none;position:absolute;bottom:9%;left:16%;right:16%;gap:8px;justify-content:center;pointer-events:auto;z-index:9}
+body.boss-mode #bossPlayerChoices{display:flex}
+#bossPlayerChoices button{flex:1;max-width:95px;min-width:0;padding:6px 2px;border:2px solid #69e5ff;border-radius:12px;background:#182547ed;color:#fff;font-size:clamp(26px,8vw,40px);touch-action:manipulation}
+#bossPlayerChoices button small{display:block;color:#ffeaa1;font-size:12px}
+#bossPlayerChoices button:disabled{opacity:.3}
+body.boss-mode #hpHud{bottom:1%;left:2%;width:32%;max-width:150px;z-index:10}
+body.boss-mode #bossIdentity{top:54%}
+@media(max-height:650px){body.boss-mode #bossChoices{top:60%}body.boss-mode #bossPickHint{top:75%}body.boss-mode #bossPlayerChoices{bottom:8%}}
+
+/* v8.8: five boss cards ABOVE the boss and five player cards BELOW. */
+body.boss-mode #bossChoices{top:23%;bottom:auto;left:2%;right:2%;gap:5px;z-index:8}
+body.boss-mode #bossChoices button{height:clamp(66px,10.5vh,110px);min-height:0;background:linear-gradient(155deg,#3c145b,#151a49);border:3px solid #df70ff;color:#fff;box-shadow:0 0 10px #b94bff88}
+body.boss-mode #bossChoices button .cardFace{font-size:clamp(24px,6vw,42px)}
+body.boss-mode #bossChoices button.cardBack{background:repeating-linear-gradient(45deg,#1a2255 0px,#1a2255 8px,#50317a 8px,#50317a 16px)}
+body.boss-mode #bossChoices button.bossDone{border-color:#80ffbd}
+body.boss-mode #bossIdentity{top:52%}
+body.boss-mode #bossTimer{top:34%;font-size:clamp(12px,3.2vw,17px);z-index:9}
+#bossPlayerLabel,#bossPlayerSlots,#bossInventory{display:none}
+body.boss-mode #bossPlayerLabel{display:block;position:absolute;top:63%;left:2%;right:2%;text-align:center;color:#a8f5ff;font-size:clamp(11px,3vw,16px);font-weight:900;text-shadow:0 1px 5px #000;z-index:9}
+body.boss-mode #bossPlayerSlots{display:grid;position:absolute;top:66%;left:2%;right:2%;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;z-index:9}
+body.boss-mode .playerSlot{display:grid;place-items:center;height:clamp(58px,9vh,98px);border:3px solid #63e6ff;border-radius:9px;background:linear-gradient(150deg,#112650ee,#0b1333f5);box-shadow:0 0 10px #39d7ff66;color:#9feeff;font-size:clamp(25px,6vw,39px);font-weight:900}
+body.boss-mode .playerSlotActive{border-color:#ffe26c;box-shadow:0 0 17px #ffe26c}
+body.boss-mode .playerSlotUsed{color:white;background:linear-gradient(145deg,#223a65,#141b43)}
+body.boss-mode #bossInventory{display:block;position:absolute;top:77%;left:8%;right:8%;text-align:center;color:#fff3b0;font-size:clamp(13px,3.6vw,19px);font-weight:900;z-index:9}
+body.boss-mode #bossPickHint{top:81%;font-size:clamp(10px,2.9vw,14px)}
+body.boss-mode #bossPlayerChoices{bottom:4%;left:18%;right:18%;gap:9px}
+body.boss-mode #bossPlayerChoices button{max-width:110px;border:3px solid #74dfff;border-radius:13px;background:#182b55f0;font-size:clamp(28px,8vw,42px);box-shadow:0 0 10px #40ceff55}
+body.boss-mode #bossPlayerChoices button:nth-child(1){border-color:#df74ff;box-shadow:0 0 12px #bf4cff77}
+body.boss-mode #bossPlayerChoices button:nth-child(2){border-color:#ffe46d;box-shadow:0 0 12px #ffe46d77}
+body.boss-mode #bossPlayerChoices button:nth-child(3){border-color:#65dfff}
+body.boss-mode #hpHud{bottom:1%;left:2%;width:30%;max-width:130px}
+@media(max-height:700px){body.boss-mode #bossChoices{top:24%}body.boss-mode #bossPlayerLabel{top:62%}body.boss-mode #bossPlayerSlots{top:65%}body.boss-mode #bossInventory{top:76%}body.boss-mode #bossPickHint{top:80%}}
+
+/* v8.8: keep all text outside the five Boss cards */
+body.boss-mode #bossChoices{top:21%;bottom:auto;left:2%;right:2%;height:9%;z-index:8}
+body.boss-mode #bossChoices button{height:100%;min-height:0;max-height:none;overflow:hidden}
+body.boss-mode #bossTimer{position:absolute;top:31.5%;left:50%;right:auto;transform:translateX(-50%);z-index:9;max-width:94vw;white-space:nowrap;font-size:clamp(11px,2.9vw,15px);padding:4px 10px;background:#080f27f5;border:1px solid #80eaff;border-radius:9px}
+body.boss-mode #bossPlayerLabel{top:63%}
+body.boss-mode #bossPlayerSlots{top:66%}
+body.boss-mode #bossInventory{top:77%}
+body.boss-mode #bossPickHint{top:81%;white-space:normal}
+#hpSettings{margin:12px 0;padding:10px;border:1px solid #ff91b7;border-radius:10px;background:#191a36}
+#hpSettings .hpSetting{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0;color:#ffe1ed;font-size:12px;font-weight:800}
+#hpSettings input{width:70px;padding:8px;border-radius:8px;border:1px solid #83e8ff;background:#0a1230;color:white;font-size:17px;text-align:center}
+#hpSettings p{font-size:11px;color:#c8d7ec;line-height:1.5}
+@media(max-height:700px){body.boss-mode #bossChoices{top:21%;height:9%}body.boss-mode #bossTimer{top:31.5%}}
+
+body.boss-mode #bossTimer{font-size:clamp(9px,2.3vw,13px);max-width:96%;white-space:normal;text-align:center;line-height:1.25}
+body.boss-mode #bossInfo{pointer-events:none}
+
+#playBoss{display:block;width:100%;margin-top:10px;padding:13px 8px;border-radius:12px;background:linear-gradient(110deg,#6d2589,#2c2e73);border:2px solid #ef9aff;color:white;font-weight:900;font-size:clamp(13px,3.7vw,17px);box-shadow:0 0 15px #a542d777;touch-action:manipulation}
+#itemSettings{margin:12px 0;padding:12px;border:1px solid #8a7cff;border-radius:10px;background:#151c39;text-align:left;font-size:13px}
+.itemSettingsGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.itemSettingsGrid label{font-size:12px;color:#e7eaff;text-align:center;font-weight:800}
+.itemSettingsGrid input{box-sizing:border-box;display:block;width:100%;min-width:0;margin-top:7px;padding:8px 2px;background:#0b1230;border:1px solid #80e8ff;border-radius:8px;color:white;text-align:center;font-size:17px}
+#itemSettings p{font-size:11px;color:#cad6f1;line-height:1.5}
+
+/* v8.8: prevent the RPG/inventory panel from covering the Boss's five cards.
+   Inventory remains visible in the dedicated row below the player's cards. */
+body.boss-mode #rpgHud{display:none!important}
+body.boss-mode #bossChoices{z-index:9}
+body.boss-mode #bossTimer{z-index:10}
+/* v8.8 boss layout and editable hand */
+body.boss-mode #roleHud,body.boss-mode #legend,body.boss-mode #soundBtn{display:none!important}
+body:not(.boss-mode) #bossConfirm{display:none!important}
+body.boss-mode #hud{justify-content:space-between}
+body.boss-mode #bossChoices{top:22%;height:9%}
+body.boss-mode #bossTimer{top:16.2%;font-size:clamp(24px,7.5vw,38px);font-weight:1000;min-width:100px;text-align:center;padding:5px 16px;border-width:2px;box-shadow:0 0 13px #5be6ff66}
+body.boss-mode #bossPlayerSlots .playerSlot{cursor:pointer;pointer-events:auto;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+body.boss-mode #bossPlayerSlots .playerSlot.playerSlotUsed{border-color:#ffe48b}
+body.boss-mode #bossPlayerSlots .playerSlot.playerSlotUsed::after{content:"✎";position:absolute;transform:translate(22px,-23px);font-size:14px;color:#fff2a3}
+#bossConfirm{display:none;position:absolute;top:80.5%;left:20%;right:20%;z-index:12;border:2px solid #ffe375;border-radius:12px;background:#243a55;color:#fff4a4;padding:9px 6px;font-size:clamp(13px,3.8vw,18px);font-weight:900;touch-action:manipulation}
+body.boss-mode #bossConfirm{display:block}
+body.boss-mode #bossPickHint{top:78.5%;font-size:clamp(10px,2.7vw,13px)}
+body.boss-mode #bossPlayerChoices{bottom:4%}
+
+/* v8.8 approved boss layout */
+body.boss-mode #bossInventory{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:absolute;top:10%;left:3%;right:auto;width:clamp(60px,18vw,88px);padding:9px 4px;background:#0b1230f0;border:2px solid #e76bff;border-radius:12px;box-shadow:0 0 12px #a54bff77;z-index:11;color:white;font-size:clamp(15px,4.4vw,22px);font-weight:900;pointer-events:none}
+body.boss-mode #bossInventory div{white-space:nowrap}
+body.boss-mode #bossPickHint{top:79.2%;left:4%;right:4%;text-align:center;white-space:nowrap;color:#fff2a8;font-size:clamp(12px,3.7vw,17px);font-weight:1000;z-index:9;pointer-events:none}
+body.boss-mode #bossPlayerChoices{bottom:10.5%;left:18%;right:18%;gap:9px;z-index:12;pointer-events:auto}
+body.boss-mode #bossPlayerChoices button{height:clamp(72px,10vh,116px)}
+body.boss-mode #bossConfirm{display:block;position:absolute;top:auto;bottom:1.7%;left:42%;right:3%;width:55%;padding:12px 4px;min-height:49px;border:3px solid #ff8bce;border-radius:15px;background:linear-gradient(180deg,#fa218d,#a6005c);color:white;font-size:clamp(16px,5vw,24px);font-weight:1000;text-shadow:0 2px 4px #50002c;box-shadow:0 0 15px #fc3c9b9c;z-index:40;pointer-events:auto!important;touch-action:manipulation;cursor:pointer}
+body.boss-mode #bossConfirm:disabled{opacity:.48;filter:grayscale(.45)}
+body.boss-mode #hpHud{bottom:1.7%;left:2%;width:34%;max-width:160px;z-index:9}
+body.boss-mode #bossPlayerSlots{z-index:12;pointer-events:auto}
+body.boss-mode #bossPlayerSlots .playerSlot{pointer-events:auto}
+body.boss-mode #bossTimer{top:15.8%}
+body.boss-mode #bossChoices{top:22%}
+@media(max-height:700px){body.boss-mode #bossInventory{top:11%}body.boss-mode #bossPickHint{top:78%}body.boss-mode #bossPlayerChoices{bottom:11%}body.boss-mode #bossConfirm{bottom:1%}}
+
+/* v8.8: move countdown up and the inventory down beside the Boss. */
+body.boss-mode #bossTimer{top:6.5%!important;left:50%;transform:translateX(-50%);z-index:15}
+body.boss-mode #bossInventory{top:35%!important;left:2%!important;right:auto!important;z-index:11}
+@media(max-height:700px){body.boss-mode #bossTimer{top:6%!important}body.boss-mode #bossInventory{top:34%!important}}
+
+/* v8.8: separate the boss heading, countdown, cards, and selection instructions. */
+body.boss-mode #bossIdentity{position:absolute!important;inset:0!important;width:100%!important;left:0!important;top:0!important;pointer-events:none}
+body.boss-mode #bossIdentity>b{position:absolute!important;top:16.7%!important;left:50%!important;transform:translateX(-50%)!important;width:max-content!important;max-width:90vw!important;box-sizing:border-box!important;font-size:clamp(11px,2.7vw,14px)!important;line-height:1.2!important;padding:3px 9px!important;white-space:nowrap!important;z-index:14!important}
+body.boss-mode #bossTrack{position:absolute!important;top:53%!important;left:10%!important;width:80%!important;margin:0!important;box-sizing:border-box!important}
+body.boss-mode #bossChoices{top:22%!important;height:9%!important}
+body.boss-mode #bossTimer{top:7%!important}
+body.boss-mode #bossPickHint{top:77.3%!important;left:5%!important;right:5%!important;white-space:nowrap!important;line-height:1.15!important;font-size:clamp(12px,3.2vw,16px)!important;z-index:16!important}
+body.boss-mode #bossPlayerChoices{bottom:6%!important;top:auto!important;left:18%!important;right:18%!important;z-index:13!important}
+body.boss-mode #bossPlayerChoices button{height:clamp(66px,9vh,106px)!important}
+body.boss-mode #bossConfirm{bottom:1.5%!important;z-index:40!important}
+@media(max-height:650px){body.boss-mode #bossPickHint{top:76%!important}body.boss-mode #bossPlayerChoices{bottom:5%!important}}
+
+/* v8.8 — only the compact boss name is allowed above the five cards. */
+body.boss-mode #bossTop{font-size:0!important;line-height:normal!important}
+body.boss-mode #bossTop::before,body.boss-mode #bossTop::after,
+body.boss-mode #bossIdentity::before,body.boss-mode #bossIdentity::after{content:none!important;display:none!important}
+body.boss-mode #bossIdentity>b{font-size:clamp(11px,2.7vw,14px)!important;line-height:1.2!important;z-index:16!important}
+body.boss-mode #bossName{font-size:inherit!important;white-space:nowrap!important}
+body.boss-mode #bossInfo{display:none!important}
+
+/* v8.8 visual Boss layout editor */
+#bossEditorOpen{display:none;position:fixed;right:2%;top:17%;z-index:85;padding:9px 12px;background:#152348;border:2px solid #71eaff;border-radius:11px;color:#fff;font-weight:900;touch-action:manipulation}
+body.boss-mode #bossEditorOpen{display:block}
+#bossEditor{display:none;position:fixed;left:2%;right:2%;bottom:1.5%;max-height:52dvh;overflow-y:auto;z-index:300;background:#101b39f7;border:2px solid #72e9ff;border-radius:17px;padding:12px;color:#fff;box-sizing:border-box;box-shadow:0 0 28px #000a;font:600 13px system-ui;touch-action:pan-y}
+#bossEditor.active{display:block}
+#bossEditor .beHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;font-size:17px}
+#bossEditor button,#bossEditor select,#bossEditor input[type=number]{background:#1c315b;color:#fff;border:1px solid #71dfff;border-radius:8px;padding:8px;font-size:13px}
+#bossEditor button{font-weight:800;touch-action:manipulation}
+#bossEditor select{width:100%;margin:4px 0 8px}
+#bossEditor .beGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#bossEditor label{display:flex;flex-direction:column;gap:3px;color:#d6f6ff}
+#bossEditor input[type=range]{width:100%;accent-color:#6beaff}
+#bossEditor .beActions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+#bossEditor .beActions button{flex:1;min-width:85px}
+#bossEditor .beNote{font-size:11px;color:#bdd6ec;line-height:1.35;margin:8px 0}
+#bossEditor .beValue{color:#ffe69a}
+body.boss-layout-edit #bossEditorOpen{display:none!important}
+body.boss-layout-edit #bossConfirm,body.boss-layout-edit #bossPlayerChoices button{pointer-events:none!important}
+body.boss-layout-edit .beSelected{outline:3px dashed #56f7ff!important;outline-offset:3px;cursor:move!important}
+#bossEditorOpen:focus-visible,#bossEditor button:focus-visible{outline:3px solid #ffdf6a}
+</style></head><body><div id="hud"><span>PUNTOS <b id="score">0</b></span><span id="roleHud">ROL: ✊ PIEDRA</span><span>RÉCORD <b id="best">0</b></span></div><div id="legend">✊ &gt; ✌️ &nbsp; ✋ &gt; ✊ &nbsp; ✌️ &gt; ✋</div><div id="level">NIVEL 1 · VELOCIDAD 1×</div><div id="hpHud"><div id="hpLabel">❤️ HP <span id="hpCount">4 / 4</span></div><div id="hpTrack"><div id="hpFill"></div></div></div><div id="rpgHud">⭐ LVL <span id="charLvl">1</span> · <span id="xpCount">XP 0 / 100</span><div id="inventoryCount" style="margin-top:8px;padding-top:6px;border-top:1px solid #7772a0;color:#ffde9b;display:flex;justify-content:space-between;gap:4px;white-space:nowrap"><span>✊ 0</span><span>✋ 0</span><span>✌️ 0</span></div><div id="xpTrack"><div id="xpFill"></div></div></div><button id="skillBtn" type="button">⚡ RAYO ×<span id="skillCount">0</span></button><div id="cutscene"><div class="orb"><span id="cutIcon">⚔️</span></div><h2 id="cutTitle">¡VICTORIA!</h2><p id="cutText">Preparando siguiente escenario…</p><button id="cutContinue" type="button">▶ AVANZAR</button></div><div id="stageHud"><span id="stageName">🌆 NEON CITY</span> · COMBATES <span id="stageTime">0 / 15</span></div>
+
+<button id="bossEditorOpen" type="button">🛠️ EDITAR</button>
+<section id="bossEditor" aria-label="Editor de posiciones del Boss">
+ <div class="beHead"><strong>🛠️ EDITOR DEL BOSS</strong><button id="beClose" type="button">✕ CERRAR</button></div>
+ <label>Elemento<select id="beTarget"></select></label>
+ <div class="beGrid">
+  <label>↔ X <span class="beValue" id="beXValue"></span><input id="beX" type="range" min="0" max="100" step=".5"></label>
+  <label>↕ Y <span class="beValue" id="beYValue"></span><input id="beY" type="range" min="0" max="100" step=".5"></label>
+  <label>↔ Ancho <span class="beValue" id="beWValue"></span><input id="beW" type="range" min="8" max="100" step=".5"></label>
+  <label>🔠 Fuente <span class="beValue" id="beFValue"></span><input id="beF" type="range" min="8" max="54" step="1"></label>
+ </div>
+ <p class="beNote">Mueve los controles para ajustar el elemento seleccionado. También puedes arrastrarlo directamente en la pantalla. Las posiciones se guardan en este dispositivo.</p>
+ <div class="beActions"><button id="beResetOne" type="button">↶ ELEMENTO</button><button id="beResetAll" type="button">↶ TODO</button><button id="beSave" type="button">💾 GUARDAR</button></div>
+</section>
+<div id="bossPanel">
+ <div id="bossTop"><div id="bossIdentity"><b style="color:#ffb6ce"><span id="bossName">⚙️ CYBER GOLEM · MUNDO 1</span></b><div id="bossTrack"><div id="bossFill"></div></div></div>
+ <div id="bossSymbol">🃏</div><div id="bossTimer">MEMORIZA</div><div id="bossInfo"></div></div>
+ <div id="bossChoices" aria-label="Cinco cartas del jefe">
+ <button type="button" data-boss-slot="0"><span class="cardFace">✊</span><span class="cardQuestion">❓</span></button>
+ <button type="button" data-boss-slot="1"><span class="cardFace">✋</span><span class="cardQuestion">❓</span></button>
+ <button type="button" data-boss-slot="2"><span class="cardFace">✌️</span><span class="cardQuestion">❓</span></button>
+ <button type="button" data-boss-slot="3"><span class="cardFace">✊</span><span class="cardQuestion">❓</span></button>
+ <button type="button" data-boss-slot="4"><span class="cardFace">✋</span><span class="cardQuestion">❓</span></button>
+ </div>
+ <div id="bossPlayerLabel">TUS CARTAS (ELIGE 5)</div>
+ <div id="bossPlayerSlots" aria-label="Tus cinco cartas">
+ <div class="playerSlot" data-player-slot="0">?</div><div class="playerSlot" data-player-slot="1">?</div><div class="playerSlot" data-player-slot="2">?</div><div class="playerSlot" data-player-slot="3">?</div><div class="playerSlot" data-player-slot="4">?</div>
+ </div>
+ <button type="button" id="bossConfirm" disabled>⚔️ ATAQUE</button>
+ <div id="bossInventory" aria-label="Ítems disponibles">
+ <div>✊ <span id="bossRockCount">0</span></div><div>✋ <span id="bossPaperCount">0</span></div><div>✌️ <span id="bossScissorCount">0</span></div>
+ </div>
+ <div id="bossPickHint">ELIGE TU CARTA PARA LA POSICIÓN 1 / 5</div>
+ <div id="bossPlayerChoices" aria-label="Elegir carta del jugador">
+ <button type="button" data-player-card="0">✊<small>×<span>0</span></small></button>
+ <button type="button" data-player-card="1">✋<small>×<span>0</span></small></button>
+ <button type="button" data-player-card="2">✌️<small>×<span>0</span></small></button>
+ </div>
+ </div><div id="roleBubble" aria-label="Rol actual">✊</div><button id="soundBtn" type="button" aria-label="Activar o silenciar sonido">🔊</button><button id="pauseBtn" type="button" aria-label="Pausar">⏸ PAUSA</button><div id="pauseOverlay"><div id="pauseCard"><h2>⏸ PAUSA</h2><p>Partida detenida</p><button id="resumeBtn">▶ CONTINUAR</button><button id="homeBtn" type="button" style="display:block;width:100%;margin-top:12px;background:#2c3058;color:#fff;border:1px solid #8c90d9">⌂ MENÚ PRINCIPAL</button></div></div><div id="flash"></div><div id="toast"></div><div id="controls"><div class="control-column control-left"><button id="left" type="button" aria-label="Mover a la izquierda">◀</button><button id="up" type="button" aria-label="Saltar">▲</button></div><div class="control-column control-right"><button id="right" type="button" aria-label="Mover a la derecha">▶</button><button id="down" type="button" aria-label="Agacharse">▼</button></div></div><div id="rolePicker" aria-label="Seleccionar piedra, papel o tijeras"><button type="button" data-role="0" aria-label="Elegir piedra">✊</button><button type="button" data-role="1" aria-label="Elegir papel">✋</button><button type="button" data-role="2" aria-label="Elegir tijeras">✌️</button></div><div id="orientationNotice" role="status"><div class="orient-card"><div class="orient-icon">📱↻</div><h2>Gira el teléfono</h2><p>Neon Rush está diseñado para jugar en vertical. La partida queda detenida mientras el teléfono está horizontal.</p></div></div><div id="menu"><div id="card"><h1>NEON RUSH 3D</h1><h3>Versión 8.8 · Mundo 1: Neon City</h3><p id="message">Cargando personaje 3D…</p><p style="color:#9feaff;font-size:13px">🌆 MUNDO 1 · NEON CITY → ⚙️ CYBER GOLEM → 🏭 IRON FACTORY</p><p id="worldStatus" style="font-size:12px;color:#ffde9b"></p><div style="font-size:13px;font-weight:700">ELIGE LA DIFICULTAD</div><div id="difficulty"><button type="button" data-mode="easy">🟢 FÁCIL</button><button type="button" data-mode="normal" class="active">🟡 NORMAL</button><button type="button" data-mode="hard">🔴 DIFÍCIL</button><button type="button" data-mode="extreme">🔥 EXTREMO</button></div><p id="recordInfo" style="font-size:12px;color:#bde9ff;line-height:1.5">Récord de dificultad: 0 · Récord general: 0</p><p style="font-size:12px;color:#b8b8df">Victoria: 10 × velocidad² puntos · Daño: Fácil −1, Medio −2, Difícil −3, Extremo −4 HP (aumenta con la velocidad)</p><div style="font-size:13px;font-weight:700">MODALIDAD</div><div id="gameModes" style="display:flex;gap:8px;margin:10px 0 16px"><button type="button" data-layout="nine" style="flex:1;padding:10px;font-size:13px">9 SÍMBOLOS · 3 ALTURAS</button></div><details id="timingPanel"><summary>⚙️ CONFIGURAR TIEMPOS DEL JUEGO</summary>
+<p id="timingHelp">Ajusta los segundos y los cambios se guardarán automáticamente en este dispositivo. Se aplican a los siguientes muros y turnos del Boss.</p>
+<div id="timingControls"></div>
+<div id="hpSettings"><div class="hpSetting"><label for="playerHpSetting">❤️ HP inicial y máximo del jugador</label><input type="number" id="playerHpSetting" min="1" max="99" step="1" inputmode="numeric" value="4"></div>
+<div class="hpSetting"><label for="bossHpSetting">⚙️ HP máximo de cada Boss</label><input type="number" id="bossHpSetting" min="1" max="99" step="1" inputmode="numeric" value="8"></div>
+<p>El HP del jugador se aplica al iniciar una partida. El HP del Boss se aplica al entrar en el siguiente combate.</p></div>
+<div id="itemSettings"><b>🃏 ÍTEMS INICIALES (PIEDRA, PAPEL Y TIJERAS)</b>
+<div class="itemSettingsGrid"><label>✊ Piedra<input id="itemRockSetting" type="number" min="0" max="999" step="1" inputmode="numeric" value="10"></label><label>✋ Papel<input id="itemPaperSetting" type="number" min="0" max="999" step="1" inputmode="numeric" value="10"></label><label>✌️ Tijeras<input id="itemScissorsSetting" type="number" min="0" max="999" step="1" inputmode="numeric" value="10"></label></div>
+<p>Los ítems configurados se entregan al comenzar una nueva partida, tanto en carrera como directamente contra el Boss. Puedes seguir acumulándolos en la carrera.</p></div><button type="button" id="timingReset">RESTABLECER TIEMPOS ORIGINALES</button></details><button id="play">▶ JUGAR DESDE NEON CITY</button><button id="playBoss" type="button">⚔️ IR DIRECTAMENTE AL BOSS</button><button id="beFromMenu" type="button" style="display:block;width:100%;margin-top:8px;padding:12px;background:#16395a;color:#aaf2ff;border:2px solid #67e7ff;border-radius:11px;font-weight:900">🛠️ DISEÑAR PANTALLA DEL BOSS</button><p><small>✊ vence ✌️ · ✋ vence ✊ · ✌️ vence ✋</small></p><p><small>9 símbolos: salta para elegir arriba, posición normal para el centro y agáchate para elegir abajo. Empatar cambia tu rol. Tras 15 combates aparece un jefe con cinco cartas ocultas: memorízalas y juega cinco cartas de izquierda a derecha. Cada carta consume un ítem. Elige las cinco primero: al final, la diferencia entre victorias y derrotas determina el daño total. El daño depende de la dificultad y aumenta con la velocidad. Gana XP para subir de nivel y aumentar tu HP máximo. Recoge corazones y rayos ⚡; usa los rayos para eliminar parte de los símbolos que te derrotarían.</small></p></div></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=x=>document.querySelector(x), scene=new THREE.Scene();
+const TIMING_DEFS=[
+ ['wallRise','Muro: tiempo de subida',1.25,.3,5,.05],
+ ['wallWait','Muro: espera antes de avanzar',2.9,0,12,.1],
+ ['bossPreview','Boss: mostrar las cinco cartas',4,1,15,.1],
+ ['bossChoice','Boss: segundos por carta (×5 para la mano)',3.2,1,15,.1]
+];
+const timing={};
+try{const stored=JSON.parse(localStorage.getItem('neonRushTimingsV75')||'{}');for(const [k,label,d,min,max] of TIMING_DEFS){const n=Number(stored[k]);timing[k]=stored[k]!==undefined&&Number.isFinite(n)?Math.min(max,Math.max(min,n)):d}}catch(e){for(const [k,label,d] of TIMING_DEFS)timing[k]=d}
+function saveTimings(){try{localStorage.setItem('neonRushTimingsV75',JSON.stringify(timing))}catch(e){}}
+function renderTimingPanel(){
+ const wrap=document.getElementById('timingControls');wrap.textContent='';
+ for(const [k,description,d,min,max,step] of TIMING_DEFS){
+  const row=document.createElement('div');row.className='timingRow';
+  const label=document.createElement('label');label.textContent=description;label.htmlFor='timing_'+k;
+  const value=document.createElement('output');value.textContent=timing[k].toFixed(2)+' s';
+  const input=document.createElement('input');input.type='range';input.id='timing_'+k;input.min=min;input.max=max;input.step=step;input.value=timing[k];
+  input.addEventListener('input',()=>{timing[k]=Number(input.value);value.textContent=timing[k].toFixed(2)+' s';saveTimings()});
+  row.append(label,value,input);wrap.append(row);
+ }
+}
+renderTimingPanel();
+document.getElementById('timingReset').addEventListener('click',()=>{for(const [k,label,d] of TIMING_DEFS)timing[k]=d;saveTimings();renderTimingPanel()});
+const HP_SETTINGS_KEY='neonRushHPSettingsV78';
+let configuredPlayerHP=4,configuredBossHP=8;
+try{const saved=JSON.parse(localStorage.getItem(HP_SETTINGS_KEY)||'{}');
+ if(Number.isInteger(saved.player)&&saved.player>=1&&saved.player<=99)configuredPlayerHP=saved.player;
+ if(Number.isInteger(saved.boss)&&saved.boss>=1&&saved.boss<=99)configuredBossHP=saved.boss;
+}catch(e){}
+function saveHPSettings(){try{localStorage.setItem(HP_SETTINGS_KEY,JSON.stringify({player:configuredPlayerHP,boss:configuredBossHP}))}catch(e){}}
+const playerHpInput=document.getElementById('playerHpSetting'),bossHpInput=document.getElementById('bossHpSetting');
+playerHpInput.value=configuredPlayerHP;bossHpInput.value=configuredBossHP;
+function clampHPInput(input,fallback){const n=Number(input.value);return Number.isFinite(n)?Math.min(99,Math.max(1,Math.round(n))):fallback}
+playerHpInput.addEventListener('change',()=>{configuredPlayerHP=clampHPInput(playerHpInput,configuredPlayerHP);playerHpInput.value=configuredPlayerHP;saveHPSettings()});
+bossHpInput.addEventListener('change',()=>{configuredBossHP=clampHPInput(bossHpInput,configuredBossHP);bossHpInput.value=configuredBossHP;saveHPSettings()});
+
+const ITEM_SETTINGS_KEY='neonRushStartingItemsV80';
+const itemInputs=['itemRockSetting','itemPaperSetting','itemScissorsSetting'].map(id=>document.getElementById(id));
+let configuredItems=[10,10,10];
+try{const saved=JSON.parse(localStorage.getItem(ITEM_SETTINGS_KEY)||'null');if(Array.isArray(saved)&&saved.length===3)configuredItems=saved.map((v,i)=>Number.isInteger(v)&&v>=0&&v<=999?v:configuredItems[i]);}catch(e){}
+itemInputs.forEach((input,i)=>{input.value=configuredItems[i];input.addEventListener('change',saveItemSettings)});
+function saveItemSettings(){configuredItems=itemInputs.map((input,i)=>{const n=Number(input.value);const value=input.value.trim()!==''&&Number.isFinite(n)?Math.max(0,Math.min(999,Math.round(n))):configuredItems[i];input.value=value;return value});try{localStorage.setItem(ITEM_SETTINGS_KEY,JSON.stringify(configuredItems))}catch(e){}}
+scene.background=new THREE.Color(0x090b23);scene.fog=new THREE.FogExp2(0x090b23,.006);
+const camera=new THREE.PerspectiveCamera(66,document.documentElement.clientWidth/document.documentElement.clientHeight,.1,350);camera.position.set(0,9.4,13.8);camera.lookAt(0,0.65,-36);
+const renderer=new THREE.WebGLRenderer({antialias:true, powerPreference:"high-performance"});renderer.setSize(document.documentElement.clientWidth,document.documentElement.clientHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0x9bcaff,0x19102e,2));const light=new THREE.DirectionalLight(0xffd1ee,2.5);light.position.set(-4,9,7);scene.add(light);
+const road=new THREE.Mesh(new THREE.BoxGeometry(10,.15,340),new THREE.MeshStandardMaterial({color:0x111b38,roughness:.6}));road.position.z=-140;road.position.y=-.12;scene.add(road);
+const laneWidth=2.7;for(let i=-1;i<=1;i++){const edge=new THREE.Mesh(new THREE.BoxGeometry(.07,.035,340),new THREE.MeshBasicMaterial({color:i===0?0x445588:0xff33a9}));edge.position.set(i===0?0:Math.sign(i)*4.9,.01,-140);scene.add(edge)}
+let marks=[];for(let z=-260;z<12;z+=8)for(let x of [-laneWidth/2,laneWidth/2]){const m=new THREE.Mesh(new THREE.BoxGeometry(.07,.02,3),new THREE.MeshBasicMaterial({color:0x59edff}));m.position.set(x,.03,z);scene.add(m);marks.push(m)}
+// Cityscape v3.8: varied architecture, textured windows, neon signage, rooftop structures and street lamps.
+// Repeated window detail is baked into a few small textures to keep mobile draw calls low.
+function facadeTexture(seed){
+ const c=document.createElement('canvas');c.width=256;c.height=512;
+ const x=c.getContext('2d');x.fillStyle=['#10172e','#191631','#101f32','#1c1832'][seed%4];x.fillRect(0,0,256,512);
+ const lit=['#ffd79a','#72dfff','#ef9eff','#d6e8ff'];
+ for(let y=16;y<500;y+=29)for(let xx=13;xx<256;xx+=29){
+  const on=((xx*13+y*7+seed*31)%11)<6;
+  x.fillStyle=on?lit[(xx+y+seed)%lit.length]:'#25324d';x.globalAlpha=on?.72:.65;x.fillRect(xx,y,16,17);
+  x.fillStyle='#0b1125';x.globalAlpha=.9;x.fillRect(xx+7,y,2,17);
+ }x.globalAlpha=1;
+ for(let y=0;y<512;y+=116){x.fillStyle='#060d20';x.fillRect(0,y,256,5)}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;
+}
+const facadeMats=Array.from({length:4},(_,i)=>new THREE.MeshStandardMaterial({map:facadeTexture(i),roughness:.9,emissive:new THREE.Color([0x14233b,0x23172d,0x10263b,0x21152e][i]),emissiveIntensity:.35}));
+const roofMat=new THREE.MeshStandardMaterial({color:0x101529,metalness:.35,roughness:.65});
+const neonColors=[0x3cecff,0xff4cb3,0xffc65a,0x9770ff];
+const neonMats=neonColors.map(color=>new THREE.MeshBasicMaterial({color}));
+const buildingGeo=new THREE.BoxGeometry(1,1,1),roofGeo=new THREE.BoxGeometry(1,1,1);
+const buildings=[];
+for(let i=0;i<120;i++){
+ const side=i%2?-1:1,depth=Math.floor(i/2),z=9-depth*5.1;
+ const h=5+((depth*7+i*3)%15),w=2.9+((i*3)%5)*.55,d=3+((i*11)%4)*.45;
+ const x=side*(7.4+(depth%3)*3.1);
+ const group=new THREE.Group();group.position.set(x,0,z);
+ const tower=new THREE.Mesh(buildingGeo,facadeMats[i%4]);tower.scale.set(w,h,d);tower.position.y=h/2;group.add(tower);
+ const roof=new THREE.Mesh(roofGeo,roofMat);roof.scale.set(w+.25,.23,d+.25);roof.position.y=h+.13;group.add(roof);
+ if(i%3===0){const crown=new THREE.Mesh(roofGeo,neonMats[i%4]);crown.scale.set(w+.3,.09,d+.3);crown.position.y=h+.29;group.add(crown)}
+ if(i%4===0){const antenna=new THREE.Mesh(new THREE.CylinderGeometry(.025,.055,1.8,5),neonMats[(i+1)%4]);antenna.position.set(0,h+1.1,0);group.add(antenna)}
+ if(i%5===0){
+  const panel=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1.05),neonMats[(i+2)%4]);
+  panel.position.set(-side*(w/2+.035),h*.67,0);panel.rotation.y=side*Math.PI/2;group.add(panel);
+  const inset=new THREE.Mesh(new THREE.PlaneGeometry(1.55,.72),new THREE.MeshBasicMaterial({color:0x090d26,side:THREE.DoubleSide}));inset.position.copy(panel.position);inset.x-=side*.012;inset.rotation.y=panel.rotation.y;group.add(inset);
+ }
+ scene.add(group);buildings.push(group);
+}
+// Neon pavement edges, overhead arches and roadside lamps repeat along the track.
+const streetLampMat=new THREE.MeshStandardMaterial({color:0x283552,metalness:.65,roughness:.35});
+const lampGlow=new THREE.MeshBasicMaterial({color:0x5ceaff});
+for(let z=5;z>-300;z-=18){
+ for(const side of [-1,1]){
+  const x=side*5.9;
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(.055,.08,6.2,7),streetLampMat);pole.position.set(x,3.1,z);scene.add(pole);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(1.05,.08,.08),streetLampMat);arm.position.set(x-side*.5,6.1,z);scene.add(arm);
+  const lamp=new THREE.Mesh(new THREE.BoxGeometry(.55,.08,.2),lampGlow);lamp.position.set(x-side*.95,6.02,z);scene.add(lamp);
+ }
+}
+// Removed overhead neon crossbars and their supports to keep the incoming symbols unobstructed.
+
+const player=new THREE.Group();player.position.set(0,0,2);scene.add(player);let mixer=null,hero=null,ready=false;
+// The game is playable even if the external GLB cannot be loaded.
+function fallbackHero(){
+ const group=new THREE.Group();
+ const mat=new THREE.MeshStandardMaterial({color:0xd94985,roughness:.65});
+ const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.28,.85,5,12),mat);
+ torso.position.y=1.25;group.add(torso);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.27,16,12),new THREE.MeshStandardMaterial({color:0xf2b4a8}));
+ head.position.y=2.2;group.add(head);
+ const hair=new THREE.Mesh(new THREE.CapsuleGeometry(.3,.85,5,12),mat);hair.position.set(0,1.85,.22);group.add(hair);
+ for(const x of [-.16,.16]){const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.11,.68,4,10),new THREE.MeshStandardMaterial({color:0xddd2e5}));leg.position.set(x,.55,0);group.add(leg)}
+ return group;
+}
+function setReady(message){
+ ready=true;$('#message').textContent=message;
+ $('#play').disabled=false;$('#play').style.opacity='1';$('#play').textContent='JUGAR';
+}
+const loader=new GLTFLoader();
+loader.load('./heroine.glb?v=33',g=>{
+ if(ready)return;try {
+  hero=g.scene;hero.scale.setScalar(.95);hero.rotation.y=0;player.add(hero);
+  if(g.animations.length){mixer=new THREE.AnimationMixer(hero);mixer.clipAction(g.animations[0]).play()}
+  setReady('Heroína 3D cargada · ¡Lista para jugar!');
+ }catch(err){console.error(err);hero=fallbackHero();player.add(hero);setReady('Modo alternativo: error de modelo 3D')}
+},undefined,e=>{
+ if(ready)return;console.error('GLB:',e);hero=fallbackHero();player.add(hero);
+ setReady('Modo alternativo: no se pudo cargar heroine.glb');
+});
+setTimeout(()=>{if(!ready){hero=fallbackHero();player.add(hero);setReady('Modo alternativo: carga demasiado lenta')}},12000);
+
+const SIGNS=[{name:'PIEDRA',emoji:'✊',color:0xff985c},{name:'PAPEL',emoji:'✋',color:0x55e7d1},{name:'TIJERAS',emoji:'✌️',color:0xc58cff}];
+const winsAgainst=[2,0,1]; // piedra > tijeras, papel > piedra, tijeras > papel
+const BASE_SPEED=17;const MODES={easy:{label:'FÁCIL',mult:1,growth:.13,damage:1},normal:{label:'MEDIO',mult:1.5,growth:.18,damage:2},hard:{label:'DIFÍCIL',mult:2,growth:.23,damage:3},extreme:{label:'EXTREMO',mult:3,growth:.3,damage:4}};
+let mode='normal',layout='nine';try{const stored=localStorage.getItem('neonRpsLayout');if(stored==='six')layout='six'}catch(e){}try{const saved=localStorage.getItem('neonRpsDifficulty');if(MODES[saved])mode=saved}catch(e){}
+function updateDifficulty(){document.querySelectorAll('#difficulty button').forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode))})}
+document.querySelectorAll('#difficulty button').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;try{localStorage.setItem('neonRpsDifficulty',mode)}catch(e){}updateDifficulty()}));updateDifficulty();
+function updateLayout(){document.querySelectorAll('#gameModes button').forEach(b=>{const active=b.dataset.layout===layout;b.style.background=active?'#4ee5f4':'#242849';b.style.color=active?'#071126':'#e4eaff';b.style.border=active?'2px solid white':'2px solid #5c6089';b.setAttribute('aria-pressed',String(active))})}
+document.querySelectorAll('#gameModes button').forEach(b=>b.addEventListener('click',()=>{layout=b.dataset.layout;try{localStorage.setItem('neonRpsLayout',layout)}catch(e){}updateLayout()}));updateLayout();
+// v4.0 uses a separate leaderboard: old 100-point scores are not comparable.
+const SCORE_KEY='neonRushRpsV39Records';
+let records={easy:0,normal:0,hard:0,extreme:0};
+try{const saved=JSON.parse(localStorage.getItem(SCORE_KEY)||'{}');for(const key of Object.keys(records)){const n=Number(saved[key]);if(Number.isFinite(n)&&n>=0)records[key]=Math.floor(n)}}catch(e){}
+function generalBest(){return Math.max(...Object.values(records))}
+function updateRecords(){const current=records[mode]||0;$('#best').textContent=current.toLocaleString('es-ES');$('#recordInfo').textContent='Récord '+MODES[mode].label+': '+current.toLocaleString('es-ES')+' · Récord general: '+generalBest().toLocaleString('es-ES')}
+// Original procedural synth soundtrack; no external files, downloads or copyrighted samples.
+let audioCtx=null,audioMaster=null,musicBus=null,sfxBus=null,musicNext=0,musicStep=0;
+let audioEnabled=true;
+try{audioEnabled=localStorage.getItem('neonAudioEnabled')!=='false'}catch(e){}
+function audioUnlock(){
+ try{
+  if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+   audioCtx=new AC();audioMaster=audioCtx.createGain();audioMaster.gain.value=.65;audioMaster.connect(audioCtx.destination);
+   musicBus=audioCtx.createGain();musicBus.gain.value=.17;musicBus.connect(audioMaster);
+   sfxBus=audioCtx.createGain();sfxBus.gain.value=.38;sfxBus.connect(audioMaster);
+  }
+  if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+  musicNext=audioCtx.currentTime+.08;audioUpdateVolume();
+ }catch(e){console.warn('Audio no disponible',e)}
+}
+function audioUpdateVolume(){
+ if(!audioCtx||!audioMaster)return;
+ const on=audioEnabled&&playing&&!paused&&!orientationHold;
+ audioMaster.gain.setTargetAtTime(on?.65:0,audioCtx.currentTime,.035);
+}
+function tone(freq,at,duration,type='sine',volume=.3,bus=musicBus,slideTo=null){
+ if(!audioCtx||!bus)return;
+ const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type=type;
+ osc.frequency.setValueAtTime(Math.max(1,freq),at);
+ if(slideTo)osc.frequency.exponentialRampToValueAtTime(Math.max(1,slideTo),at+duration);
+ gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),at+.008);
+ gain.gain.exponentialRampToValueAtTime(.0001,at+duration);
+ osc.connect(gain);gain.connect(bus);osc.start(at);osc.stop(at+duration+.015);
+}
+// 124 BPM, original minor-key bass and arpeggio, kick/snare/hi-hat synth patterns.
+const bassNotes=[110,110,130.81,98,110,146.83,130.81,98];
+const arp=[440,523.25,659.25,523.25,392,493.88,587.33,493.88,349.23,440,523.25,440,392,493.88,587.33,659.25];
+function audioMusicTick(){
+ if(!audioEnabled||!audioCtx||audioCtx.state!=='running')return;
+ const beat=60/124,stepDur=beat/2,now=audioCtx.currentTime;
+ if(musicNext<now-.3)musicNext=now+.03;
+ let count=0;
+ while(musicNext<now+.22&&count++<4){
+  const st=musicStep++,t=musicNext;
+  if(st%2===0){tone(120,t,.12,'sine',.55,musicBus,48);tone(55,t,.18,'triangle',.18,musicBus,43)}
+  if(st%4===2){tone(190,t,.1,'triangle',.11,musicBus,95)}
+  tone(st%2?900:1250,t,.025,'square',.022,musicBus);
+  if(st%2===0)tone(bassNotes[Math.floor(st/2)%bassNotes.length],t,.21,'sawtooth',.14,musicBus);
+  if(st%2===1)tone(arp[st%arp.length],t,.13,'triangle',.09,musicBus);
+  musicNext+=stepDur;
+ }
+}
+function sfx(kind){
+ if(!audioEnabled||!audioCtx||audioCtx.state!=='running'||!playing||paused)return;
+ const t=audioCtx.currentTime+.006;
+ const play=(f,d,w='sine',v=.26,to=null,offset=0)=>tone(f,t+offset,d,w,v,sfxBus,to);
+ switch(kind){
+  case 'win':play(620,.12,'sine',.23,880);play(880,.16,'triangle',.18,1175,.085);break;
+  case 'tie':play(490,.11,'triangle',.18,420);play(580,.1,'triangle',.15,490,.11);break;
+  case 'hurt':play(210,.34,'sawtooth',.36,70);break;
+  case 'bossHit':play(290,.18,'sawtooth',.31,62);play(95,.28,'triangle',.38,42,.025);play(1300,.07,'square',.11,280,.015);break;
+  case 'shield':play(750,.07,'sine',.12,950);break;
+  case 'gameover':play(390,.22,'triangle',.27,260);play(260,.35,'sawtooth',.2,110,.19);break;
+  case 'heart':play(520,.1,'sine',.19,700);play(780,.16,'sine',.2,1100,.09);break;
+  case 'pickup':play(620,.08,'triangle',.18,900);play(1000,.17,'triangle',.18,1300,.08);break;
+  case 'lightning':play(800,.34,'sawtooth',.23,95);play(1200,.15,'square',.12,300,.08);break;
+  case 'level':play(520,.12,'triangle',.22,650);play(780,.14,'triangle',.22,980,.12);play(1040,.23,'sine',.25,1320,.25);break;
+  case 'jump':play(300,.13,'sine',.13,560);break;
+  case 'slide':play(430,.12,'triangle',.11,180);break;
+  case 'move':play(270,.055,'sine',.06,340);break;
+ }
+}
+function updateSoundButton(){const b=document.querySelector('#soundBtn');b.textContent=audioEnabled?'🔊':'🔇';b.setAttribute('aria-label',audioEnabled?'Silenciar música y efectos':'Activar música y efectos')}
+document.querySelector('#soundBtn').addEventListener('click',()=>{audioEnabled=!audioEnabled;
+ try{localStorage.setItem('neonAudioEnabled',String(audioEnabled))}catch(e){}
+ if(audioEnabled)audioUnlock();audioUpdateVolume();updateSoundButton();});
+updateSoundButton();
+
+const START_HP=4;let maxHP=START_HP,hp=START_HP,hearts=[],heartWave=0,charLevel=1,xp=0,skillCharges=0,lightnings=[],lightningWave=0;
+// Each difficulty has its own damage. Speed progression adds one point
+// of damage for each full 1.0x increase above the starting speed.
+function currentDamage(){
+ const setting=MODES[mode];
+ const extra=Math.max(0,Math.floor((speed/BASE_SPEED-setting.mult)+1e-7));
+ return Math.min(8,setting.damage+extra);
+}
+function xpNeeded(){return 100+50*(charLevel-1)}
+let inventory=[0,0,0];
+function updateRPG(){
+ $('#charLvl').textContent=charLevel;
+ $('#xpCount').textContent='XP '+xp+' / '+xpNeeded();
+ $('#xpFill').style.width=(100*xp/xpNeeded())+'%';
+ $('#inventoryCount').innerHTML='<span>✊ '+inventory[0]+'</span><span>✋ '+inventory[1]+'</span><span>✌️ '+inventory[2]+'</span>';
+ $('#skillCount').textContent=skillCharges;$('#skillBtn').disabled=skillCharges===0;
+}
+function addXP(n){xp+=n;while(xp>=xpNeeded()){sfx('level');xp-=xpNeeded();charLevel++;maxHP++;hp=Math.min(maxHP,hp+1);updateHP();toast('⭐ NIVEL '+charLevel+' · HP MÁXIMO +1','#ddc2ff');burst(player.position.x,1.8,2,0xb48aff,30)}updateRPG()}
+function blinkOnDamage(){
+ // Blink only the character mesh, not the role bubble or the HUD.
+ damageBlink=1.25;
+ if(hero)hero.visible=true;
+}
+function resetBlink(){damageBlink=0;if(hero)hero.visible=true;}
+function updateHP(){document.querySelector('#hpCount').textContent=hp+' / '+maxHP;document.querySelector('#hpFill').style.width=(100*hp/maxHP)+'%';}
+let damageBlink=0; // Also serves as temporary invulnerability timer
+let orientationHold=false,paused=false,resolvedWaves=new Set(),playing=false,lane=0,score=0,speed=18,elapsed=0,spawn=.8,items=[],jump=0,vel=0,slide=0,prev=performance.now(),role=0,toastTime=0,particles=[],flashTime=0,level=1,waves=0;
+updateRecords();updateHP();updateRPG();
+function setRole(r){role=r;const h=$('#roleHud');h.textContent='ROL: '+SIGNS[r].emoji+' '+SIGNS[r].name;document.querySelectorAll('#rolePicker [data-role]').forEach(b=>{const selected=Number(b.dataset.role)===r;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});$('#roleBubble').textContent=SIGNS[r].emoji;h.classList.remove('pulse');void h.offsetWidth;h.classList.add('pulse');setTimeout(()=>h.classList.remove('pulse'),350);}
+function toast(s,color='#fff'){const t=$('#toast');t.textContent=s;t.style.color=color;t.style.opacity='1';toastTime=1.15;}
+// Three distinctive outlines: square, circle, pentagon.
+// Shapes and signs are randomized independently of lane and height each wave.
+function makeSignTexture(r,shape){
+ const c=document.createElement('canvas');c.width=c.height=512;
+ const x=c.getContext('2d');
+ const color=['#ef263b','#ffffff','#1767ff'][shape];
+ x.clearRect(0,0,512,512);
+ // Five straight edges with sharp vertices for a genuine pentagon.
+ x.save();x.beginPath();
+ if(shape===0){x.rect(37,37,438,438)}
+ else if(shape===1){x.arc(256,256,217,0,Math.PI*2)}
+ else{for(let j=0;j<5;j++){const angle=-Math.PI/2+j*2*Math.PI/5;const px=256+234*Math.cos(angle),py=256+234*Math.sin(angle);if(j===0)x.moveTo(px,py);else x.lineTo(px,py)}x.closePath()}
+ x.fillStyle='#111936';x.fill();x.lineJoin='miter';x.miterLimit=8;
+ x.strokeStyle='#070b1d';x.lineWidth=44;x.stroke();
+ x.strokeStyle=color;x.lineWidth=34;x.stroke();
+ x.save();x.clip();x.globalAlpha=.25;x.fillStyle=color;
+ for(let k=-512;k<900;k+=74)x.fillRect(k,0,12,512);
+ x.restore();
+ // Draw emoji on an isolated transparent layer. Measure actual painted pixels,
+ // not browser font metrics (iOS Safari offsets the victory-hand glyph).
+ const glyph=document.createElement('canvas');glyph.width=glyph.height=512;
+ const g=glyph.getContext('2d',{willReadFrequently:true});
+ g.textAlign='center';g.textBaseline='middle';
+ g.font='300px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
+ g.fillText(SIGNS[r].emoji,256,256);
+ const pixels=g.getImageData(0,0,512,512).data;
+ let left=512,right=-1,top=512,bottom=-1;
+ for(let py=0;py<512;py+=2)for(let px=0;px<512;px+=2){
+  if(pixels[(py*512+px)*4+3]>35){
+   left=Math.min(left,px);right=Math.max(right,px);
+   top=Math.min(top,py);bottom=Math.max(bottom,py);
+  }
+ }
+ if(right>=left){
+  const gw=right-left+2,gh=bottom-top+2;
+  const maxSize=shape===2?238:278;
+  const factor=Math.min(maxSize/gw,maxSize/gh,1.35);
+  const dw=gw*factor,dh=gh*factor;
+  x.drawImage(glyph,left,top,gw,gh,256-dw/2,256-dh/2,dw,dh);
+ }
+ x.restore();
+ const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;return tx;
+}
+const signMaterials=[0,1,2].map(shape=>SIGNS.map((_,r)=>new THREE.MeshBasicMaterial({map:makeSignTexture(r,shape),side:THREE.DoubleSide,transparent:true})));
+
+// Genuine silhouettes, not rounded rectangular textures on square planes.
+// Each geometry has UVs in [0,1], matching the 512px canvas texture.
+function makeOutlineGeometry(shape){
+ if(shape===0)return new THREE.PlaneGeometry(1.75,1.75);
+ const path=new THREE.Shape();
+ const count=shape===1?64:5;
+ const radius=shape===1?0.875:0.875;
+ for(let j=0;j<count;j++){
+  const a=-Math.PI/2+j*2*Math.PI/count;
+  const x=Math.cos(a)*radius,y=-Math.sin(a)*radius;
+  if(j===0)path.moveTo(x,y);else path.lineTo(x,y);
+ }
+ path.closePath();
+ const geo=new THREE.ShapeGeometry(path);
+ const pos=geo.getAttribute('position'),uv=geo.getAttribute('uv');
+ for(let i=0;i<pos.count;i++)uv.setXY(i,pos.getX(i)/1.75+.5,pos.getY(i)/1.75+.5);
+ uv.needsUpdate=true;
+ return geo;
+}
+const signGeometries=[0,1,2].map(makeOutlineGeometry);
+
+
+// Mundo 1: a finite runner stage followed by a direct RPS boss battle.
+// No external 3D assets required for the boss; built from simple metallic parts.
+const BATTLES_PER_STAGE=15;
+let BOSS_MAX_HP=8;
+let world=1,stageBattles=0,bossAnim=null,transitionTimer=0,cutsceneTimer=0,cutsceneKind="",cardPhase="ready",cardClock=0,cardOrder=[0,1,2],cardSwaps=0;
+const WORLDS=[{name:"NEON CITY",boss:"CYBER GOLEM",emoji:"🌆",sky:0x090b23,glow:0xff548c},{name:"IRON FACTORY",boss:"MECHA SCORPION",emoji:"🏭",sky:0x24100f,glow:0xffa34a},{name:"FROZEN CIRCUIT",boss:"ICE TITAN",emoji:"❄️",sky:0x071d35,glow:0x5ceaff},{name:"INFERNO CORE",boss:"FLAME DRAGON",emoji:"🌋",sky:0x2c090d,glow:0xff4325},{name:"VOID DIMENSION",boss:"SHADOW EMPEROR",emoji:"🌌",sky:0x180c35,glow:0xaa6dff}];
+function worldData(){return WORLDS[(world-1)%WORLDS.length]}
+function setWorldVisual(){const w=worldData();scene.background.setHex(w.sky);scene.fog.color.setHex(w.sky);bossGlow.color.setHex(w.glow);$("#stageName").textContent=w.emoji+" "+w.name;$("#bossName").textContent="⚙️ "+w.boss+" · MUNDO "+world;$("#stageTime").textContent=stageBattles+" / "+BATTLES_PER_STAGE;}
+let phase='menu',bossHP=BOSS_MAX_HP,bossSign=0,bossClock=0,bossTurn=0,bossLocked=false,bossWait=0,bossVictory=false;
+let bossDamageBlink=0;
+const bossGroup=new THREE.Group();bossGroup.visible=false;scene.add(bossGroup);
+const metal=new THREE.MeshStandardMaterial({color:0x354666,metalness:.75,roughness:.28});
+const bossGlow=new THREE.MeshBasicMaterial({color:0xff548c});
+function bossPart(geo,mat,x,y,z){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);bossGroup.add(m);return m}
+bossPart(new THREE.BoxGeometry(2.6,3.0,1.5),metal,0,3.1,0);
+bossPart(new THREE.BoxGeometry(1.8,1.4,1.35),metal,0,5.3,0);
+// Distinct, high-contrast face, visible from the player's camera.
+const faceDark=new THREE.MeshBasicMaterial({color:0x11162b});
+bossPart(new THREE.BoxGeometry(1.62,.88,.16),faceDark,0,5.38,.735);
+for(const side of [-1,1]){
+ const eye=bossPart(new THREE.BoxGeometry(.48,.20,.12),bossGlow,side*.43,5.58,.84);
+ eye.rotation.z=side*.22;
+}
+bossPart(new THREE.BoxGeometry(.65,.085,.11),bossGlow,0,5.12,.84);
+bossPart(new THREE.SphereGeometry(.55,16,12),bossGlow,0,3.3,.81);
+for(const x of [-1,1]){
+ bossPart(new THREE.BoxGeometry(.9,2.5,.95),metal,x*1.95,3.15,0);
+ bossPart(new THREE.BoxGeometry(.85,2.1,1.05),metal,x*.7,1.05,0);
+ bossPart(new THREE.BoxGeometry(.65,.45,.65),bossGlow,x*1.95,1.9,0);
+}
+for(const side of [-1,1]){
+ bossPart(new THREE.BoxGeometry(1.45,.62,1.22),metal,side*1.72,4.48,0);
+ bossPart(new THREE.BoxGeometry(1.05,.12,1.27),bossGlow,side*1.72,4.78,.03);
+ bossPart(new THREE.BoxGeometry(.94,.70,.94),metal,side*1.95,1.78,.06);
+}
+bossGroup.position.set(0,0,-13);bossGroup.scale.setScalar(1.25);
+const strikeMat=new THREE.MeshBasicMaterial({color:0x82ffdb,transparent:true,opacity:.9,depthWrite:false});
+const strike=new THREE.Mesh(new THREE.SphereGeometry(.45,12,10),strikeMat);strike.visible=false;scene.add(strike);
+const shield=new THREE.Mesh(new THREE.TorusGeometry(1.1,.09,8,36),new THREE.MeshBasicMaterial({color:0x5feaff,transparent:true,opacity:.8}));shield.visible=false;scene.add(shield);
+function startBossAnimation(result,chosen){bossAnim={t:0,duration:1.35,result,chosen};bossGroup.rotation.y=0;strike.visible=true;shield.visible=result==='tie';strike.material.color.setHex(result==='win'?0x70ffc2:result==='lose'?0xff5e85:0x79ddff);strike.scale.setScalar(1);strike.position.set(result==='lose'?0:player.position.x,2.1,result==='lose'?-11:1);$('#bossInfo').textContent=result==='win'?'⚔️ ¡ATAQUE ACERTADO!':result==='tie'?'🛡️ ¡CHOQUE Y BLOQUEO!':'💥 ¡EL JEFE CONTRAATACA!';}
+function animateBossFight(dt){if(!bossAnim)return;bossAnim.t+=dt;const a=bossAnim,p=Math.min(1,a.t/a.duration),strikeP=Math.min(1,p*1.6);bossGroup.position.z=-13+(a.result==='lose'?Math.sin(Math.PI*p)*2:Math.sin(Math.PI*p)*.6);bossGroup.rotation.z=Math.sin(p*Math.PI*3)*(a.result==='win'?.12:.06);player.position.z=2+(a.result==='win'?-Math.sin(Math.PI*p)*1.8:a.result==='lose'?Math.sin(Math.PI*p)*1.4:0);player.rotation.z=(a.result==='lose'?-1:1)*Math.sin(Math.PI*p)*.18;strike.position.z=a.result==='lose'?-11+strikeP*13:1-strikeP*12;strike.position.y=2.2+Math.sin(Math.PI*strikeP)*1.1;strike.scale.setScalar(1+Math.sin(Math.PI*p)*1.5);shield.position.set(0,2,-5);shield.scale.setScalar(1+Math.sin(Math.PI*p)*.5);if(p>=1){strike.visible=false;shield.visible=false;bossAnim=null;bossGroup.position.z=-13;bossGroup.rotation.z=0;player.position.z=2;player.rotation.z=0;}}
+function continueNextWorld(){
+ if(!playing)return;
+ try{localStorage.setItem('neonWorld1Won','yes')}catch(e){}
+ records[mode]=Math.max(records[mode],score);try{localStorage.setItem(SCORE_KEY,JSON.stringify(records))}catch(e){}updateRecords();
+ world++;stageBattles=0;phase='runner';bossVictory=false;bossAnim=null;strike.visible=false;shield.visible=false;bossGroup.visible=false;bossDamageBlink=0;
+ document.body.classList.remove('boss-mode');$('#bossPanel').style.display='none';$('#stageHud').style.display='block';$('#controls').style.display='block';$('#rolePicker').style.display='flex';$('#roleBubble').style.display='block';
+ player.position.set(0,0,2);player.rotation.set(0,0,0);lane=0;jump=vel=slide=0;spawn=1.1;resetBlink();
+ camera.position.set(0,9.4,13.8);camera.lookAt(0,.65,-36);setWorldVisual();
+ toast('🏆 MUNDO '+(world-1)+' SUPERADO · '+worldData().name,'#ffe7a0');sfx('level');updateWorldStatus();
+}
+
+
+function beginCutscene(kind){$('#rolePicker').style.display='none';
+ if(phase==='cutscene')return;
+ phase='cutscene';cutsceneKind=kind;cutsceneTimer=0;bossAnim=null;strike.visible=false;shield.visible=false;
+ document.body.classList.remove('boss-mode');$('#bossPanel').style.display='none';$('#cutscene').style.display='flex';$('#cutContinue').style.display='block';$('#cutContinue').textContent=kind==='victory'?'▶ SIGUIENTE ESCENARIO':'↻ VOLVER AL MENÚ';$('#controls').style.display='none';$('#skillBtn').style.display='none';
+ $('#cutIcon').textContent=kind==='victory'?'🏆':'💔';
+ $('#cutTitle').textContent=kind==='victory'?'¡JEFE DERROTADO!':'¡HAS SIDO DERROTADO!';
+ $('#cutText').textContent=kind==='victory'?'MUNDO '+world+' COMPLETADO · MUNDO '+(world+1)+' DESBLOQUEADO':'CYBER GOLEM HA GANADO · FIN DE LA PARTIDA';
+ sfx(kind==='victory'?'level':'gameover');
+ // Short original fanfare/sting synthesized by the existing audio engine.
+ try{if(audioCtx&&audioEnabled){const base=audioCtx.currentTime;const tones=kind==='victory'?[523,659,784,1046]:[440,349,262,196];tones.forEach((hz,i)=>{const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='triangle';osc.frequency.value=hz;gain.gain.setValueAtTime(.0001,base+i*.22);gain.gain.exponentialRampToValueAtTime(.07,base+i*.22+.03);gain.gain.exponentialRampToValueAtTime(.0001,base+i*.22+.34);osc.connect(gain);gain.connect(audioCtx.destination);osc.start(base+i*.22);osc.stop(base+i*.22+.35)})}}catch(e){}
+}
+function finishCutscene(){
+ if(phase!=='cutscene')return;$('#cutContinue').style.display='none';$('#cutscene').style.display='none';
+ if(cutsceneKind==='victory'){phase='boss';continueNextWorld();$('#skillBtn').style.display='block'}
+ else{phase='boss';lose()}
+}
+$('#cutContinue').addEventListener('click',()=>{if(phase==='cutscene'&&!paused)finishCutscene()});
+function hideBoss(){$('#rolePicker').style.display='none';
+ phase='menu';document.body.classList.remove('boss-mode');$('#cutscene').style.display='none';$('#cutContinue').style.display='none';bossAnim=null;strike.visible=false;shield.visible=false;player.position.z=2;player.rotation.z=0;bossGroup.visible=false;bossDamageBlink=0;$('#bossPanel').style.display='none';$('#stageHud').style.display='none';
+ camera.position.set(0,9.4,13.8);camera.lookAt(0,.65,-36);
+}
+function updateWorldStatus(){
+ const won=(()=>{try{return localStorage.getItem('neonWorld1Won')==='yes'}catch(e){return false}})();
+ $('#worldStatus').textContent=won?'🏆 Mundo 1 completado · Puedes volver a jugar':'🏁 15 combates por escenario · derrota al jefe y continúa';
+}
+updateWorldStatus();
+function beginBoss(){
+ if(!playing||phase!=='runner')return;
+ phase='boss';$('#rolePicker').style.display='none';BOSS_MAX_HP=configuredBossHP;bossHP=BOSS_MAX_HP;bossDamageBlink=0;bossVictory=false;bossTurn=0;bossLocked=false;bossWait=0;bossAnim=null;setWorldVisual();$('#bossFill').style.width='100%';
+ items.forEach(o=>scene.remove(o.mesh));items=[];removeWaveWalls();hearts.forEach(h=>scene.remove(h.mesh));hearts=[];lightnings.forEach(h=>scene.remove(h.mesh));lightnings=[];resolvedWaves.clear();
+ document.body.classList.add('boss-mode');requestAnimationFrame(beApplyAll);bossGroup.visible=true;$('#bossPanel').style.display='block';$('#stageHud').style.display='none';$('#controls').style.display='none';$('#roleBubble').style.display='none';$('#skillBtn').style.display='block';
+ camera.position.set(0,8.5,16);camera.lookAt(0,2,-9);
+ $('#level').textContent='⚔️ JEFE DEL MUNDO '+world+' · '+MODES[mode].label;
+ toast('⚙️ ¡'+worldData().boss+'!','#ffd0f0');sfx('level');
+ newBossTurn();
+}
+let bossHand=[0,1,2,0,1],bossSlot=0,bossPlayerHand=[null,null,null,null,null];
+function renderPlayerHand(){
+ document.querySelectorAll('[data-player-slot]').forEach((el,i)=>{
+  el.textContent=bossPlayerHand[i]===null?'?':SIGNS[bossPlayerHand[i]].emoji;
+  el.classList.toggle('playerSlotActive',i===bossSlot&&cardPhase==='ready');
+  el.classList.toggle('playerSlotUsed',bossPlayerHand[i]!==null);
+  el.setAttribute('role','button');el.setAttribute('tabindex',bossPlayerHand[i]!==null?'0':'-1');
+  el.setAttribute('aria-label',bossPlayerHand[i]===null?'Carta vacía '+(i+1):'Corregir carta '+(i+1));
+ });
+ $('#bossRockCount').textContent=inventory[0];
+ $('#bossPaperCount').textContent=inventory[1];
+ $('#bossScissorCount').textContent=inventory[2];
+}
+function renderCards(){
+ renderPlayerHand();
+ document.querySelectorAll('[data-boss-slot]').forEach((button,i)=>{
+  button.querySelector('.cardFace').textContent=SIGNS[bossHand[i]].emoji;
+  button.classList.toggle('cardBack',cardPhase!=='preview'&&cardPhase!=='result');
+  button.classList.toggle('bossDone',cardPhase==='result');
+  button.classList.toggle('bossActive',cardPhase==='ready'&&i===bossSlot);
+  button.disabled=true;
+ });
+ const picking=cardPhase==='ready'&&!bossLocked&&!bossVictory;
+ $('#bossConfirm').disabled=!picking||bossPlayerHand.some(v=>v===null);
+ $('#bossConfirm').style.visibility=picking?'visible':'hidden';
+ document.querySelectorAll('[data-player-card]').forEach(button=>{
+  const r=Number(button.dataset.playerCard);
+  button.querySelector('small span').textContent=inventory[r];
+  button.disabled=!picking||inventory[r]<1;
+ });
+ $('#bossPickHint').textContent='ESCOGE TU CARTA.';
+}
+function newBossTurn(){
+ if(!playing||phase!=='boss'||bossVictory)return;
+ bossLocked=true;bossSlot=0;bossPlayerHand=[null,null,null,null,null];
+ bossHand=Array.from({length:5},()=>Math.floor(Math.random()*3));
+ cardPhase='preview';cardClock=timing.bossPreview;
+ $('#bossTimer').textContent=cardClock.toFixed(1);
+ $('#bossInfo').textContent='';renderCards();sfx('move');
+}
+function tickBossCards(dt){
+ if(cardPhase!=='preview')return;
+ cardClock-=dt;
+ $('#bossTimer').textContent=Math.max(0,cardClock).toFixed(1);
+ if(cardClock<=0){
+  cardPhase='ready';bossLocked=false;
+  // Time limit is for choosing the entire five-card hand, not per card.
+  bossClock=timing.bossChoice*5;
+  $('#bossTimer').textContent=bossClock.toFixed(1);
+  renderCards();
+ }
+}
+function resolveBossHand(){
+ if(!playing||phase!=='boss'||bossVictory||cardPhase!=='ready')return;
+ bossLocked=true;cardPhase='result';
+ let victories=0,defeats=0,ties=0;
+ for(let i=0;i<5;i++){
+  const r=bossPlayerHand[i],enemy=bossHand[i];
+  if(r===null){defeats++;continue}
+  if(winsAgainst[r]===enemy)victories++;
+  else if(r===enemy)ties++;
+  else defeats++;
+ }
+ const net=victories-defeats;
+ renderCards();
+ $('#bossTimer').textContent='✊ '+victories+' VICTORIAS · 💥 '+defeats+' DERROTAS · 🤝 '+ties+' EMPATES';
+ $('#bossInfo').textContent=net>0?'JEFE −'+net+' HP':net<0?'JUGADOR −'+(-net)+' HP':'EMPATE GLOBAL · SIN DAÑO';
+ if(net>0){
+  bossHP=Math.max(0,bossHP-net);bossDamageBlink=.95;sfx('bossHit');
+  startBossAnimation('win',bossPlayerHand[4]??-1);
+  const points=Math.round(10*(speed/BASE_SPEED)**2)*net*3;score+=points;
+  $('#score').textContent=score;burst(0,3.5,-12,0x70ffc2,30);
+ }else if(net<0){
+  // The net number of lost duels is the exact HP damage; do not
+  // apply difficulty damage or invulnerability to the aggregate.
+  hp=Math.max(0,hp+net);updateHP();blinkOnDamage();sfx('hurt');
+  burst(0,2,-11,0xff547d,25);startBossAnimation('lose',-1);
+ }else{sfx('tie');startBossAnimation('tie',-1)}
+ $('#bossFill').style.width=(100*bossHP/BOSS_MAX_HP)+'%';
+ bossTurn+=5;
+ if(bossHP===0){winWorld();return}
+ if(hp===0){beginCutscene('defeat');return}
+ bossWait=2.6; // Leave all five revealed cards visible before the next hand.
+}
+function correctBossCard(i){
+ if(!playing||paused||orientationHold||phase!=='boss'||bossLocked||cardPhase!=='ready')return;
+ const previous=bossPlayerHand[i];
+ if(previous===null)return;
+ inventory[previous]++;bossPlayerHand[i]=null;
+ bossSlot=bossPlayerHand.indexOf(null);
+ updateRPG();renderCards();sfx('move');
+}
+function chooseBoss(r){
+ if(!playing||paused||orientationHold||phase!=='boss'||bossLocked||cardPhase!=='ready')return;
+ if(inventory[r]<=0){toast('NO TIENES '+SIGNS[r].emoji,'#ffb8b8');return}
+ const slot=bossPlayerHand.indexOf(null);
+ if(slot<0){toast('TOCA UNA CARTA PARA CORREGIR O CONFIRMA','#ffeaa0');return}
+ inventory[r]--;bossPlayerHand[slot]=r;bossSlot=bossPlayerHand.indexOf(null);
+ if(bossSlot<0)bossSlot=5;
+ updateRPG();renderCards();sfx('move');
+}
+document.querySelectorAll('[data-player-slot]').forEach(el=>{
+ const i=Number(el.dataset.playerSlot);
+ el.addEventListener('click',()=>correctBossCard(i));
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();correctBossCard(i)}});
+});
+$('#bossConfirm').addEventListener('click',e=>{
+ e.preventDefault();e.stopPropagation();
+ if(!playing||paused||phase!=='boss'||cardPhase!=='ready'||bossLocked)return;
+ if(bossPlayerHand.some(v=>v===null)){toast('ESCOGE LAS CINCO CARTAS','#ffeaa0');return}
+ resolveBossHand();
+});
+function bossDamagePlayer(){
+ if(damageBlink>0){toast('🛡️ INVULNERABLE','#b9edff');return}
+ const damage=currentDamage();hp=Math.max(0,hp-damage);updateHP();sfx('hurt');
+ burst(0,2,-11,0xff547d,25);
+ if(hp===0){if(phase==='boss'){beginCutscene('defeat');return}else{lose();return}}blinkOnDamage();toast('−'+damage+' HP · ¡CUIDADO!','#ff9bb3');
+}
+function winWorld(){
+ if(!playing||phase!=='boss'||bossVictory)return;
+ bossVictory=true;bossLocked=true;document.querySelectorAll('[data-player-card]').forEach(b=>b.disabled=true);
+ const bossXP=100*world;
+ addXP(bossXP);
+ $('#bossInfo').textContent='🏆 JEFE DERROTADO · +'+bossXP+' XP';
+ 
+ $('#bossInfo').textContent='🏆 ¡JEFE DERROTADO! · +'+(100*world)+' XP';
+ bossWait=0;transitionTimer=1.5;sfx('level');burst(0,4,-12,0xffdd70,50);
+}
+document.querySelectorAll('[data-player-card]').forEach(b=>b.addEventListener('click',()=>chooseBoss(Number(b.dataset.playerCard))));
+
+function start(){document.body.classList.remove('boss-mode');hideBoss();updateWorldStatus();audioUnlock();resetBlink();if(!ready){$('#message').textContent='Cargando el modelo. Espera unos segundos…';return;}items.forEach(i=>scene.remove(i.mesh));items=[];removeWaveWalls();hearts.forEach(h=>scene.remove(h.mesh));hearts=[];lightnings.forEach(h=>scene.remove(h.mesh));lightnings=[];heartWave=0;lightningWave=0;world=1;stageBattles=0;transitionTimer=0;cutsceneTimer=0;$('#cutscene').style.display='none';setWorldVisual();configuredPlayerHP=clampHPInput(playerHpInput,configuredPlayerHP);configuredBossHP=clampHPInput(bossHpInput,configuredBossHP);saveHPSettings();maxHP=configuredPlayerHP;hp=configuredPlayerHP;charLevel=1;xp=0;saveItemSettings();inventory=[...configuredItems];skillCharges=0;updateHP();updateRPG();resolvedWaves.clear();paused=false;$('#pauseOverlay').style.display='none';$('#pauseBtn').style.display='block';$('#controls').style.display='block';$('#hpHud').style.display='block';$('#rpgHud').style.display='block';$('#skillBtn').style.display='block';$('#pauseBtn').textContent='⏸ PAUSA';$('#roleBubble').style.display='block';particles.forEach(p=>scene.remove(p.mesh));particles=[];lane=0;score=elapsed=jump=vel=slide=0;waves=0;level=1;flashTime=0;$('#flash').style.opacity='0';$('#level').textContent='ETAPA 1 · '+MODES[mode].label+' · VELOCIDAD '+MODES[mode].mult.toFixed(1)+'× · DAÑO '+MODES[mode].damage+' HP · '+'9'+' SÍMBOLOS';$('#score').textContent='0';updateRecords();setRole(Math.floor(Math.random()*3));speed=BASE_SPEED*MODES[mode].mult;spawn=1.1;playing=true;phase='runner';$('#rolePicker').style.display='flex';$('#stageHud').style.display='block';$('#stageTime').textContent='0 / '+BATTLES_PER_STAGE;$('#menu').style.display='none';audioUpdateVolume();$('#toast').style.opacity='0';player.position.set(0,0,2);if(hero)hero.scale.y=.95}
+// Handle every press immediately; a rapid second press can cross two lanes.
+// Snap the visual position to the target lane, rather than waiting for interpolation.
+function move(n){
+ if(!playing||paused||orientationHold||phase!=='runner')return;sfx('move');
+ lane=Math.max(-1,Math.min(1,lane+n));
+ player.position.x=lane*laneWidth;
+}function up(){if(playing&&!paused&&phase==='runner'&&jump===0&&slide===0){vel=9;sfx('jump')}}function down(){if(playing&&!paused&&phase==='runner'&&jump===0){slide=.75;sfx('slide')}}
+function togglePause(){if(!playing||orientationHold)return;paused=!paused;audioUpdateVolume();$('#pauseOverlay').style.display=paused?'grid':'none';$('#pauseBtn').textContent=paused?'▶ SEGUIR':'⏸ PAUSA';prev=performance.now()}function returnToMenu(){hideBoss();resetBlink();
+ // Leave a paused game without triggering game-over or changing the high score.
+ playing=false;paused=false;audioUpdateVolume();
+ $('#pauseOverlay').style.display='none';$('#pauseBtn').style.display='none';$('#controls').style.display='none';
+ $('#roleBubble').style.display='none';$('#hpHud').style.display='none';$('#rpgHud').style.display='none';$('#skillBtn').style.display='none';$('#toast').style.opacity='0';
+ $('#menu').style.display='grid';audioUpdateVolume();updateRecords();updateWorldStatus();$('#play').textContent='JUGAR';
+ $('#message').textContent='Elige dificultad y modalidad para comenzar.';
+ items.forEach(o=>scene.remove(o.mesh));items=[];removeWaveWalls();hearts.forEach(h=>scene.remove(h.mesh));hearts=[];lightnings.forEach(h=>scene.remove(h.mesh));lightnings=[];resolvedWaves.clear();
+ particles.forEach(p=>{scene.remove(p.mesh);p.mesh.geometry.dispose();p.mesh.material.dispose()});particles=[];
+ player.position.set(0,0,2);if(hero)hero.scale.y=.95;
+ prev=performance.now();
+}
+$('#homeBtn').onclick=returnToMenu;
+document.querySelectorAll('#rolePicker [data-role]').forEach(b=>{
+ const select=()=>{if(!playing||paused||orientationHold||phase!=='runner')return;const r=Number(b.dataset.role);if(r!==role){setRole(r);sfx('move')}};
+ let lastTouch=0;
+ b.addEventListener('pointerdown',e=>{if(e.cancelable)e.preventDefault();lastTouch=performance.now();select()});
+ b.addEventListener('click',e=>{if(performance.now()-lastTouch<650){e.preventDefault();return}select()});
+});
+$('#skillBtn').onclick=useLightning;
+$('#pauseBtn').onclick=togglePause;$('#resumeBtn').onclick=togglePause;$('#play').onclick=start;$('#playBoss').onclick=()=>{start();if(playing&&phase==='runner'){stageBattles=BATTLES_PER_STAGE;beginBoss();}};
+// pointerdown reacts on touch-down, with no Safari delayed-click dependency.
+// Suppress the compatibility click after pointerdown so a tap moves exactly once.
+for(const [id,action] of [['left',()=>move(-1)],['right',()=>move(1)],['up',up],['down',down]]){
+ const button=$('#'+id);
+ let lastPointer=0;
+ button.addEventListener('pointerdown',e=>{
+  if(e.cancelable)e.preventDefault();
+  lastPointer=performance.now();
+  action();
+ });
+ button.addEventListener('click',e=>{
+  if(performance.now()-lastPointer<650){e.preventDefault();return;}
+  action();
+ });
+}
+addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key==='a')move(-1);if(e.key==='ArrowRight'||e.key==='d')move(1);if(e.key==='ArrowUp'||e.key===' ')up();if(e.key==='ArrowDown')down();if((e.key==='Escape'||e.key==='p'||e.key==='P')&&playing)togglePause();if((e.key==='q'||e.key==='Q')&&playing)useLightning();if(e.key==='Enter'&&!playing)start()});let sx,sy;renderer.domElement.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});renderer.domElement.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;if(Math.abs(dx)>Math.abs(dy))move(Math.sign(dx));else dy<0?up():down()},{passive:true});
+// Each wave has one sign per lane (classic), or two signs at different heights.
+// In six-sign mode the upper and lower rows are separate selectable targets.
+function shuffledSigns(){const a=[0,1,2];for(let i=2;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// A real brick wall behind the nine posters, with staggered mortar joints.
+const waveWalls=[];
+function makeBrickTexture(){
+ const c=document.createElement('canvas');c.width=1024;c.height=768;const g=c.getContext('2d');
+ g.fillStyle='#8c8a89';g.fillRect(0,0,c.width,c.height);
+ const bw=204,bh=96;
+ for(let row=0;row<9;row++)for(let col=-1;col<7;col++){
+  const x=col*bw-(row%2)*bw/2+5,y=row*bh+5;
+  const tint=(row*29+col*43+300)%55;
+  g.fillStyle=`rgb(${113+tint},${55+Math.floor(tint*.55)},${49+Math.floor(tint*.4)})`;
+  g.fillRect(x,y,bw-9,bh-9);
+  g.fillStyle='rgba(255,220,175,.12)';g.fillRect(x+5,y+5,bw-19,7);
+  g.fillStyle='rgba(12,8,12,.28)';g.fillRect(x+5,y+bh-20,bw-19,10);
+ }
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;
+}
+const brickMaterial=new THREE.MeshStandardMaterial({map:makeBrickTexture(),roughness:.97,metalness:0,side:THREE.DoubleSide});
+function wallRumble(){
+ if(!audioEnabled||!audioCtx||audioCtx.state!=='running'||paused)return;
+ const t=audioCtx.currentTime,seconds=1.3;
+ const buffer=audioCtx.createBuffer(1,Math.floor(audioCtx.sampleRate*seconds),audioCtx.sampleRate),data=buffer.getChannelData(0);
+ let filtered=0;for(let i=0;i<data.length;i++){filtered=filtered*.96+(Math.random()*2-1)*.04;const fade=Math.min(1,i/(audioCtx.sampleRate*.12))*(1-i/data.length);data[i]=filtered*fade*3.2}
+ const source=audioCtx.createBufferSource();source.buffer=buffer;
+ const low=audioCtx.createBiquadFilter();low.type='lowpass';low.frequency.value=180;
+ const gain=audioCtx.createGain();gain.gain.value=.32;
+ source.connect(low);low.connect(gain);gain.connect(sfxBus);source.start(t);
+ tone(64,t,1.05,'sawtooth',.14,sfxBus,34);
+}
+// Brick-wall destruction: winning RPS shatters the selected wall into flying blocks.
+const wallDebris=[];
+const debrisGeometry=new THREE.BoxGeometry(1,0.64,.42);
+const debrisMaterials=[
+ new THREE.MeshStandardMaterial({color:0x9c4b40,roughness:.9}),
+ new THREE.MeshStandardMaterial({color:0x79362e,roughness:.9}),
+ new THREE.MeshStandardMaterial({color:0xb46a50,roughness:.9})
+];
+function breakWall(wave){
+ const index=waveWalls.findIndex(w=>w.wave===wave);
+ if(index<0)return;
+ const w=waveWalls.splice(index,1)[0],wall=w.mesh;
+ const origin=wall.position.clone();
+ scene.remove(wall);wall.geometry.dispose();
+ // 9 columns × 8 rows: small bricks separate and tumble away from the runner.
+ for(let row=0;row<8;row++)for(let col=0;col<9;col++){
+  const brick=new THREE.Mesh(debrisGeometry,debrisMaterials[(row+col)%3]);
+  const x=(col-4)*1.15+((row%2)*.3);
+  const y=(row-3.5)*.84;
+  brick.position.set(origin.x+x,origin.y+y,origin.z);
+  brick.rotation.z=(Math.random()-.5)*.1;
+  scene.add(brick);
+  wallDebris.push({mesh:brick,
+   vx:x*.48+(Math.random()-.5)*2.2,
+   vy:1.8+Math.random()*4.6+(row*.12),
+   vz:2+Math.random()*4,
+   rx:(Math.random()-.5)*7,ry:(Math.random()-.5)*7,
+   life:1.15+Math.random()*.65});
+ }
+ // Remove the posters as part of the collapsing wall.
+ for(const o of items)if(o.wave===wave){o.hit=true;scene.remove(o.mesh)}
+ burst(player.position.x,1.8,2,0xffb88a,32);
+ wallRumble();
+}
+function updateWallDebris(dt){
+ for(let i=wallDebris.length-1;i>=0;i--){
+  const d=wallDebris[i];d.life-=dt;
+  d.mesh.position.x+=d.vx*dt;
+  d.mesh.position.y+=d.vy*dt;
+  d.mesh.position.z+=d.vz*dt;
+  d.mesh.rotation.x+=d.rx*dt;
+  d.mesh.rotation.y+=d.ry*dt;
+  d.vy-=13*dt;
+  if(d.life<=0||d.mesh.position.y< -6){
+   scene.remove(d.mesh);wallDebris.splice(i,1);
+  }
+ }
+}
+function clearWallDebris(){for(const d of wallDebris)scene.remove(d.mesh);wallDebris.length=0}
+function removeWaveWalls(){clearWallDebris();for(const w of waveWalls){scene.remove(w.mesh);w.mesh.geometry.dispose()}waveWalls.length=0}
+
+function create(){
+ const z=-32;waves++;
+ const wall=new THREE.Mesh(new THREE.BoxGeometry(10.7,7.4,.42),brickMaterial);wall.position.set(0,-4.0,z-.42);scene.add(wall);waveWalls.push({mesh:wall,wave:waves,rise:timing.wallRise,hold:timing.wallWait,targetY:3.6,initialRise:timing.wallRise});wallRumble();
+ // All nine unique shape/symbol pairs, distributed randomly across the 3×3 grid.
+ // Every wave contains exactly three squares, three circles and three pentagons;
+ // each shape appears once with rock, once with paper and once with scissors.
+ const pairs=[];
+ for(let shape=0;shape<3;shape++)for(let r=0;r<3;r++)pairs.push({shape,r});
+ for(let i=pairs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pairs[i],pairs[j]]=[pairs[j],pairs[i]]}
+ const heights=[1.25,3.4,5.55];
+ for(let band=0;band<3;band++)for(let i=0;i<3;i++){
+  const l=i-1,{shape,r}=pairs[band*3+i];
+  const mesh=new THREE.Mesh(signGeometries[shape],signMaterials[shape][r]);
+  mesh.position.set(l*laneWidth,heights[band]-7,z+.04);scene.add(mesh);
+  // Wall rises from below the road, then waits close enough to read.
+  items.push({mesh,l,r,band,shape,hit:false,wave:waves,rise:timing.wallRise,hold:timing.wallWait,targetY:heights[band],initialRise:timing.wallRise});
+ }
+}
+
+// Heart pickups appear between sign waves and never count as a RPS choice.
+const HEART_TYPES=[{hp:1,color:0xff587e,label:'ROJO'},{hp:2,color:0x5fe6ff,label:'AZUL'},{hp:3,color:0xd18cff,label:'VIOLETA'},{hp:4,color:0xffd65e,label:'DORADO'}];
+function heartTexture(t){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.clearRect(0,0,256,256);x.shadowBlur=22;x.shadowColor='#'+t.color.toString(16).padStart(6,'0');x.fillStyle=x.shadowColor;x.font='bold 154px "Apple Color Emoji","Segoe UI Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('♥',128,115);x.shadowBlur=0;x.strokeStyle='#fff';x.lineWidth=3;x.strokeText('♥',128,115);x.fillStyle='#fff';x.font='bold 34px system-ui';x.fillText('+'+t.hp+' HP',128,221);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex;}
+const heartMats=HEART_TYPES.map(t=>new THREE.MeshBasicMaterial({map:heartTexture(t),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+function createHeart(){const idx=Math.random()<.55?0:Math.random()<.7?1:Math.random()<.8?2:3;const l=Math.floor(Math.random()*3)-1;const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),heartMats[idx]);mesh.position.set(l*laneWidth,1.65,-76);scene.add(mesh);hearts.push({mesh,l,hp:HEART_TYPES[idx].hp,hit:false});}
+// A collectible lightning charge removes roughly half of the losing targets
+// in each of the next three unresolved waves. Winning/tie choices remain intact.
+const lightningMaterial=new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#fff3b0';x.shadowColor='#ffe052';x.shadowBlur=25;x.font='bold 170px system-ui';x.textAlign='center';x.textBaseline='middle';x.fillText('⚡',128,113);x.shadowBlur=0;x.fillStyle='white';x.font='bold 27px system-ui';x.fillText('RAYO',128,220);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),transparent:true,side:THREE.DoubleSide,depthWrite:false});
+function createLightning(){const l=Math.floor(Math.random()*3)-1;const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.0,2.0),lightningMaterial);mesh.position.set(l*laneWidth,1.65,-76);scene.add(mesh);lightnings.push({mesh,l,hit:false})}
+function useLightning(){if(!playing||paused||orientationHold||skillCharges<=0||phase==='cutscene')return;if(phase==='boss'){if(bossLocked||bossVictory||cardPhase!=='ready')return;bossLocked=true;startBossAnimation('win',-1);skillCharges--;updateRPG();sfx('lightning');bossHP=Math.max(0,bossHP-1);$('#bossFill').style.width=(100*bossHP/BOSS_MAX_HP)+'%';burst(0,3,-12,0xffe57a,32);toast('⚡ RAYO CONTRA EL JEFE','#ffe57a');if(bossHP===0)winWorld();else{bossLocked=false;renderCards()}return;}sfx('lightning');skillCharges--;updateRPG();let removed=0;const waveIds=[...new Set(items.filter(o=>!o.hit&&!resolvedWaves.has(o.wave)&&o.mesh.position.z<1).map(o=>o.wave))].sort((a,b)=>a-b).slice(0,3);for(const wave of waveIds){const losing=items.filter(o=>o.wave===wave&&!o.hit&&o.r!==role&&o.r!==winsAgainst[role]);const count=Math.ceil(losing.length/2);for(const o of losing.sort(()=>Math.random()-.5).slice(0,count)){o.hit=true;scene.remove(o.mesh);burst(o.mesh.position.x,o.mesh.position.y,o.mesh.position.z,0xffe57a,5);removed++}}toast('⚡ RAYO: '+removed+' SÍMBOLOS ELIMINADOS','#ffe57a');burst(player.position.x,2,2,0xffe57a,38)}
+function burst(x,y,z,color,count=22){
+ const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:1,depthWrite:false});
+ for(let i=0;i<count;i++){
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(.09,.09,.09),material.clone());
+  mesh.position.set(x,y,z);scene.add(mesh);
+  particles.push({mesh,vx:(Math.random()-.5)*9,vy:Math.random()*6+1,vz:(Math.random()-.5)*6,life:.7+Math.random()*.5,max:1.2});
+ }
+}
+function flash(color){const f=$('#flash');f.style.background=color;flashTime=.2;f.style.opacity='.3'}
+function lose(){document.body.classList.remove('boss-mode');$('#rolePicker').style.display='none';hideBoss();sfx('gameover');resetBlink();playing=false;paused=false;audioUpdateVolume();$('#pauseBtn').style.display='none';$('#controls').style.display='none';$('#pauseOverlay').style.display='none';$('#roleBubble').style.display='none';$('#hpHud').style.display='none';$('#rpgHud').style.display='none';$('#skillBtn').style.display='none';records[mode]=Math.max(records[mode],score);try{localStorage.setItem(SCORE_KEY,JSON.stringify(records))}catch(e){}updateRecords();$('#message').textContent=`${score} puntos · Tu rol era ${SIGNS[role].name}`;$('#play').textContent='VOLVER A JUGAR';$('#menu').style.display='grid';burst(player.position.x,1.5,2,0xff376b,36)}
+function resolve(r,shape,wave){
+ stageBattles++;$('#stageTime').textContent=stageBattles+' / '+BATTLES_PER_STAGE;
+ if(r===role){sfx('tie');let options=[0,1,2].filter(x=>x!==role);setRole(options[Math.floor(Math.random()*2)]);toast('¡EMPATE! NUEVO ROL: '+SIGNS[role].emoji,'#80eaff');burst(player.position.x,1.7,2,0x4be8ff,24);}
+ else if(r===winsAgainst[role]){sfx('win');const multiplier=speed/BASE_SPEED;const points=Math.round(10*multiplier*multiplier);score+=points;
+ const reward=[1,3,2][shape];
+ inventory[r]+=reward;updateRPG();
+ if(wave!==undefined)breakWall(wave);
+ toast('¡GANASTE! +'+reward+' '+SIGNS[r].emoji+' · '+points+' PTS','#83ff9e');burst(player.position.x,1.7,2,0x68ffab,28);}
+ else {if(damageBlink>0){toast('🛡️ INVULNERABLE','#b9edff');sfx('shield');return;}sfx('hurt');const damage=currentDamage();hp=Math.max(0,hp-damage);if(hp>0)blinkOnDamage();updateHP();burst(player.position.x,1.7,2,0xff547d,20);if(hp===0){toast('¡SIN HP! −'+damage+' HP','#ff688e');lose()}else{toast('¡DAÑO! −'+damage+' HP · QUEDAN '+hp,'#ff9bb3')}}
+}
+function tick(now){requestAnimationFrame(tick);let dt=Math.min(.05,(now-prev)/1000);prev=now;
+ if(!paused&&!orientationHold&&toastTime>0){toastTime-=dt;if(toastTime<=0)$('#toast').style.opacity='0'}
+ if(!paused&&!orientationHold&&flashTime>0){flashTime-=dt;$('#flash').style.opacity=String(Math.max(0,flashTime/.2*.3))}for(const p of particles){if(paused||orientationHold)continue;p.life-=dt;p.mesh.position.x+=p.vx*dt;p.mesh.position.y+=p.vy*dt;p.mesh.position.z+=p.vz*dt;p.vy-=12*dt;p.mesh.material.opacity=Math.max(0,p.life/p.max)}particles=particles.filter(p=>{if(p.life<=0){scene.remove(p.mesh);p.mesh.material.dispose();p.mesh.geometry.dispose();return false}return true});if(mixer&&playing&&!paused&&!orientationHold)mixer.update(dt*1.5);if(playing&&!paused&&!orientationHold)updateWallDebris(dt);
+ if(playing&&!paused&&!orientationHold&&damageBlink>0){
+  damageBlink=Math.max(0,damageBlink-dt);
+  if(hero)hero.visible=damageBlink===0||Math.floor(damageBlink/.115)%2===0;
+ }
+ // Cutscene waits for explicit player confirmation; no automatic advance.
+ if(playing&&!paused&&!orientationHold&&phase==='boss'){
+  audioMusicTick();animateBossFight(dt);bossGroup.rotation.y=Math.sin(now*.001)*.09;
+  if(bossDamageBlink>0){
+   bossDamageBlink=Math.max(0,bossDamageBlink-dt);
+   bossGroup.visible=bossDamageBlink===0||Math.floor(bossDamageBlink/.105)%2===0;
+  }else bossGroup.visible=true;
+  if(bossVictory){transitionTimer-=dt;if(transitionTimer<=0)beginCutscene('victory')}
+  else if(bossWait>0){bossWait-=dt;if(bossWait<=0)newBossTurn()}
+  else if(cardPhase!=='ready'){tickBossCards(dt)}
+  else if(!bossLocked){bossClock-=dt;$('#bossTimer').textContent=Math.max(0,bossClock).toFixed(1);if(bossClock<=0)resolveBossHand()}
+ }
+ if(playing&&!paused&&!orientationHold&&phase==='runner'){audioMusicTick();elapsed+=dt;}
+ if(playing&&!paused&&!orientationHold&&phase==='runner'){elapsed+=0;level=Math.min(12,1+Math.floor(elapsed/20));const setting=MODES[mode];speed=Math.min(BASE_SPEED*setting.mult*2.2,BASE_SPEED*setting.mult+elapsed*setting.growth);$('#level').textContent='MUNDO '+world+' · ETAPA '+level+' · '+setting.label+' · VELOCIDAD '+(speed/BASE_SPEED).toFixed(1)+'× · DAÑO '+currentDamage()+' HP · '+'9'+' SÍMBOLOS · +'+Math.round(10*(speed/BASE_SPEED)**2)+' PTS';spawn-=dt;if(spawn<=0&&stageBattles<BATTLES_PER_STAGE){create();heartWave++;if(heartWave%4===0)createHeart();if(heartWave%6===0)createLightning();spawn=Math.max(4.4,32/speed+4.15)}
+ player.position.x+=(lane*laneWidth-player.position.x)*Math.min(1,dt*16);
+ if(jump>0||vel>0){jump+=vel*dt;vel-=23*dt;if(jump<0){jump=0;vel=0}}
+ player.position.y=jump;slide=Math.max(0,slide-dt);if(hero)hero.scale.y=slide>0?.62:.95;
+ for(const m of marks){m.position.z+=speed*dt;if(m.position.z>12)m.position.z-=272}
+ for(const w of waveWalls){
+ if(w.rise>0){w.rise=Math.max(0,w.rise-dt);const t=1-w.rise/w.initialRise;w.mesh.position.y=w.targetY-7.6*Math.pow(1-t,3)}
+ else if(w.hold>0){w.hold=Math.max(0,w.hold-dt)}else{w.mesh.position.z+=speed*dt}
+ }
+ for(let wi=waveWalls.length-1;wi>=0;wi--)if(waveWalls[wi].mesh.position.z>15){const w=waveWalls.splice(wi,1)[0];scene.remove(w.mesh);w.mesh.geometry.dispose()}
+ for(const o of items){if(o.rise>0){
+  o.rise=Math.max(0,o.rise-dt);
+  const t=1-o.rise/o.initialRise, eased=1-Math.pow(1-t,3);
+  o.mesh.position.y=o.targetY-7*(1-eased);
+ }else if(o.hold>0){o.hold=Math.max(0,o.hold-dt)}else{o.mesh.position.z+=speed*dt;}
+ if(!o.hit&&!resolvedWaves.has(o.wave)&&o.mesh.position.z>1&&o.mesh.position.z<3.1&&o.l===lane&&
+    (o.band===(jump>=1.15?2:slide>0?0:1))){
+   // Resolve exactly one choice per wave. Leave the other five symbols visible
+   // as they travel behind the player, rather than deleting the whole wave.
+   resolvedWaves.add(o.wave);o.hit=true;scene.remove(o.mesh);resolve(o.r,o.shape,o.wave);if(!playing)break
+ }
+ }
+ for(const h of hearts){h.mesh.position.z+=speed*dt;h.mesh.rotation.z=Math.sin(elapsed*4)*.08;if(!h.hit&&h.mesh.position.z>1&&h.mesh.position.z<3.1&&h.l===lane){h.hit=true;scene.remove(h.mesh);sfx('heart');const gained=Math.min(h.hp,maxHP-hp);hp=Math.min(maxHP,hp+h.hp);updateHP();toast(gained?'❤️ +'+gained+' HP':'❤️ HP COMPLETOS','#ffb4ce');burst(player.position.x,1.6,2,0xff719f,14)}}hearts=hearts.filter(h=>{if(h.hit||h.mesh.position.z>15){scene.remove(h.mesh);return false}return true});
+ for(const h of lightnings){h.mesh.position.z+=speed*dt;h.mesh.rotation.z=Math.sin(elapsed*5)*.08;if(!h.hit&&h.mesh.position.z>1&&h.mesh.position.z<3.1&&h.l===lane){h.hit=true;scene.remove(h.mesh);sfx('pickup');skillCharges=Math.min(9,skillCharges+1);updateRPG();toast('⚡ RAYO CONSEGUIDO · PULSA ⚡','#ffe47b');burst(player.position.x,1.6,2,0xffe47b,15)}}lightnings=lightnings.filter(h=>{if(h.hit||h.mesh.position.z>15){scene.remove(h.mesh);return false}return true});
+ items=items.filter(o=>{if(o.hit||o.mesh.position.z>15){scene.remove(o.mesh);return false}return true});for(const w of resolvedWaves){if(!items.some(o=>o.wave===w))resolvedWaves.delete(w)}$('#score').textContent=score;if(playing&&stageBattles>=BATTLES_PER_STAGE)beginBoss();
+ }
+ if(playing&&phase==='runner'&&!orientationHold){const p=new THREE.Vector3(player.position.x,player.position.y+2.65,player.position.z);p.project(camera);const b=$('#roleBubble');b.style.left=((p.x+1)*document.documentElement.clientWidth/2)+'px';b.style.top=((-p.y+1)*document.documentElement.clientHeight/2)+'px';b.style.display='block'}
+ renderer.render(scene,camera)}requestAnimationFrame(tick);
+function updateOrientation(){
+ orientationHold=window.matchMedia('(orientation: landscape) and (pointer: coarse)').matches;audioUpdateVolume();
+ // Preserve the game state while landscape is shown; do not reset or resume a user pause.
+ prev=performance.now();
+}
+function syncViewport(){
+ const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight;
+ if(!w||!h)return;
+ camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
+ window.scrollTo(0,0);updateOrientation();
+}
+// Prevent Safari's gesture zoom and accidental double-tap zoom during play.
+// Allow single-finger taps on game buttons and menu scrolling.
+document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gestureend',e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
+let lastTouchEnd=0;
+document.addEventListener('touchend',e=>{
+ const now=Date.now();
+ if(playing&&now-lastTouchEnd<300)e.preventDefault();
+ lastTouchEnd=now;
+},{passive:false});
+addEventListener('resize',syncViewport);
+if(window.visualViewport){visualViewport.addEventListener('resize',syncViewport);visualViewport.addEventListener('scroll',()=>window.scrollTo(0,0));}
+
+addEventListener('orientationchange',()=>{updateOrientation();setTimeout(syncViewport,150);setTimeout(syncViewport,500)});
+syncViewport();
+
+/* Boss visual layout editor: independent of gameplay, normalized coordinates. */
+const BE_KEY='neonRushBossLayoutV88';
+const BE_FIELDS=[
+ ['bossTimer','⏱️ Cuenta regresiva'],
+ ['bossIdentity>b','⚙️ Nombre del Boss'],
+ ['bossChoices','🟪 Cinco cartas del Boss'],
+ ['bossInventory','🎒 Inventario lateral'],
+ ['bossTrack','💗 Vida del Boss'],
+ ['bossPlayerLabel','📝 Texto: Tus cartas'],
+ ['bossPlayerSlots','🟦 Cinco cartas del jugador'],
+ ['bossPickHint','📝 Texto: Escoge tu carta'],
+ ['bossPlayerChoices','✊✋✌️ Botones de elección'],
+ ['bossConfirm','⚔️ Botón ATAQUE'],
+ ['hpHud','❤️ Vida del jugador'],
+ ['hud','🏆 Puntos y récord'],
+ ['pauseBtn','⏸️ Pausa']
+];
+const beGet=id=>id==='bossIdentity>b'?document.querySelector('#bossIdentity>b'):document.getElementById(id);
+let beData={},beActive=false,beSelected=BE_FIELDS[0][0],bePrevPaused=false,beDrag=null;
+try{beData=JSON.parse(localStorage.getItem(BE_KEY)||'{}')||{}}catch(e){beData={}}
+function beApply(id){
+ const el=beGet(id),d=beData[id];if(!el||!d)return;
+ el.style.setProperty('position','fixed','important');
+ el.style.setProperty('top',d.y+'%','important');
+ el.style.setProperty('left',d.x+'%','important');
+ el.style.setProperty('right','auto','important');
+ el.style.setProperty('bottom','auto','important');
+ el.style.setProperty('width',d.w+'%','important');
+ el.style.setProperty('max-width','none','important');
+ el.style.setProperty('transform','none','important');
+ el.style.setProperty('margin','0','important');
+ if(d.f){
+  el.style.setProperty('font-size',d.f+'px','important');
+  if(id==='bossIdentity>b')document.getElementById('bossName').style.setProperty('font-size',d.f+'px','important');
+  if(id==='bossChoices'||id==='bossPlayerSlots'||id==='bossPlayerChoices'){
+   el.querySelectorAll('button,.cardFace,.cardQuestion,.playerSlot').forEach(child=>child.style.setProperty('font-size',d.f+'px','important'));
+  }
+ }
+}
+function beApplyAll(){BE_FIELDS.forEach(([id])=>beApply(id))}
+function bePersist(){try{localStorage.setItem(BE_KEY,JSON.stringify(beData))}catch(e){}}
+function beMeasure(id){
+ const el=beGet(id),r=el.getBoundingClientRect();
+ return {x:Math.max(0,Math.min(100,100*r.left/innerWidth)),y:Math.max(0,Math.min(100,100*r.top/innerHeight)),w:Math.max(8,Math.min(100,100*r.width/innerWidth)),f:Math.round(parseFloat(getComputedStyle(el).fontSize)||16)}
+}
+function beSelect(id){
+ beGet(beSelected)?.classList.remove('beSelected');
+ beSelected=id;document.getElementById('beTarget').value=id;
+ const el=beGet(id);el?.classList.add('beSelected');
+ const d=beData[id]||beMeasure(id);
+ for(const [key,field] of [['x','beX'],['y','beY'],['w','beW'],['f','beF']]){
+  document.getElementById(field).value=d[key];
+  document.getElementById(field+'Value').textContent=(Math.round(d[key]*10)/10)+(key==='f'?' px':'%');
+ }
+}
+function beOpen(){
+ if(!document.body.classList.contains('boss-mode'))return;
+ bePrevPaused=paused;paused=true;beActive=true;
+ document.body.classList.add('boss-layout-edit');
+ document.getElementById('bossEditor').classList.add('active');
+ beApplyAll();beSelect(beSelected);
+}
+function beClose(){
+ beActive=false;document.body.classList.remove('boss-layout-edit');
+ document.getElementById('bossEditor').classList.remove('active');
+ beGet(beSelected)?.classList.remove('beSelected');
+ paused=bePrevPaused;bePersist();
+}
+document.getElementById('beTarget').innerHTML=BE_FIELDS.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('');
+document.getElementById('beTarget').addEventListener('change',e=>beSelect(e.target.value));
+document.getElementById('bossEditorOpen').addEventListener('click',beOpen);
+document.getElementById('beClose').addEventListener('click',beClose);
+document.getElementById('beSave').addEventListener('click',()=>{bePersist();beClose()});
+for(const [key,field] of [['x','beX'],['y','beY'],['w','beW'],['f','beF']]){
+ document.getElementById(field).addEventListener('input',e=>{
+  const d=beData[beSelected]||beMeasure(beSelected);
+  d[key]=Number(e.target.value);beData[beSelected]=d;beApply(beSelected);
+  document.getElementById(field+'Value').textContent=d[key]+(key==='f'?' px':'%');
+  bePersist();
+ });
+}
+function beClear(id){
+ const el=beGet(id);if(!el)return;
+ ['position','top','left','right','bottom','width','max-width','transform','margin','font-size'].forEach(k=>el.style.removeProperty(k));
+ if(id==='bossIdentity>b')document.getElementById('bossName').style.removeProperty('font-size');
+ if(['bossChoices','bossPlayerSlots','bossPlayerChoices'].includes(id))el.querySelectorAll('button,.cardFace,.cardQuestion,.playerSlot').forEach(c=>c.style.removeProperty('font-size'));
+ delete beData[id];
+}
+document.getElementById('beResetOne').addEventListener('click',()=>{beClear(beSelected);bePersist();beSelect(beSelected)});
+document.getElementById('beResetAll').addEventListener('click',()=>{
+ if(!confirm('¿Restablecer todas las posiciones y fuentes del Boss?'))return;
+ BE_FIELDS.forEach(([id])=>beClear(id));bePersist();beSelect(beSelected);
+});
+document.getElementById('beFromMenu').addEventListener('click',()=>{
+ document.getElementById('playBoss').click();
+ if(playing&&phase==='boss')beOpen();
+});
+/* Touch/pointer drag: select element and move it without triggering gameplay. */
+BE_FIELDS.forEach(([id])=>{
+ const el=beGet(id);if(!el)return;
+ el.addEventListener('pointerdown',e=>{
+  if(!beActive)return;
+  e.preventDefault();e.stopPropagation();
+  beSelect(id);
+  const d=beData[id]||beMeasure(id);beData[id]={...d};
+  beDrag={id,pointer:e.pointerId,startX:e.clientX,startY:e.clientY,x:d.x,y:d.y};
+  try{el.setPointerCapture(e.pointerId)}catch(_){}
+ },true);
+ el.addEventListener('pointermove',e=>{
+  if(!beActive||!beDrag||beDrag.id!==id||beDrag.pointer!==e.pointerId)return;
+  e.preventDefault();e.stopPropagation();
+  const d=beData[id];
+  d.x=Math.max(0,Math.min(100-d.w,beDrag.x+100*(e.clientX-beDrag.startX)/innerWidth));
+  d.y=Math.max(0,Math.min(96,beDrag.y+100*(e.clientY-beDrag.startY)/innerHeight));
+  beApply(id);beSelect(id);
+ },true);
+ el.addEventListener('pointerup',e=>{if(beDrag?.id===id){beDrag=null;bePersist()}},true);
+ el.addEventListener('pointercancel',()=>{beDrag=null},true);
+});
+window.addEventListener('resize',()=>{if(document.body.classList.contains('boss-mode'))beApplyAll()});
+
+</script></body></html>
