@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid)) && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.enabled == true;
+    }
+    match /gameConfig/published { allow read: if true; allow write: if isAdmin(); }
+    match /gameConfig/draft { allow read, write: if isAdmin(); }
+    match /versions/{versionId} { allow read, create: if isAdmin(); allow update, delete: if false; }
+    match /admins/{adminId} { allow read: if isAdmin() && request.auth.uid == adminId; allow write: if false; }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
